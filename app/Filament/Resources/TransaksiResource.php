@@ -19,15 +19,14 @@ class TransaksiResource extends Resource
 
     protected static ?string $modelLabel = 'Transaksi';
 
+    protected static ?string $pluralModelLabel = 'Transaksi';
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('id_user')
-                    ->required()
-                    ->numeric(),
                 Forms\Components\DateTimePicker::make('waktu_transaksi')
                     ->required(),
                 Forms\Components\TextInput::make('total_harga')

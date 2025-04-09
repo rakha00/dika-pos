@@ -19,6 +19,8 @@ class LaporanHarianResource extends Resource
 
     protected static ?string $modelLabel = 'Laporan Harian';
 
+    protected static ?string $pluralModelLabel = 'Laporan Harian';
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
