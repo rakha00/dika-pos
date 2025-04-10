@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::create('transaksis', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_user');
-            $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
             $table->dateTime('waktu_transaksi');
             $table->decimal('total_harga', 12, 2);
             $table->timestamps();

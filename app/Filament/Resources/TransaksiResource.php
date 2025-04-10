@@ -20,6 +20,8 @@ class TransaksiResource extends Resource
 
     protected static ?string $modelLabel = 'Transaksi';
 
+    protected static ?string $pluralModelLabel = 'Transaksi';
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
