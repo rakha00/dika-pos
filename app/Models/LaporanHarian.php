@@ -7,6 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class LaporanHarian extends Model
 {
-    /** @use HasFactory<\Database\Factories\LaporanHarianFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'tanggal',
+        'total_transaksi',
+        'total_penjualan',
+        'id_user',
+    ];
 }
