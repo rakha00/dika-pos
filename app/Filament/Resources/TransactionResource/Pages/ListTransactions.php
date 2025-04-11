@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Resources\TransaksiResource\Pages;
+namespace App\Filament\Resources\TransactionResource\Pages;
 
-use App\Filament\Resources\TransaksiResource;
+use App\Filament\Resources\TransactionResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables;
 
-class ListTransaksis extends ListRecords
+class ListTransactions extends ListRecords
 {
-    protected static string $resource = TransaksiResource::class;
+    protected static string $resource = TransactionResource::class;
 
     protected function getHeaderActions(): array
     {

@@ -13,30 +13,7 @@
         <!-- Order Details -->
         <h2 class="mt-4 text-lg font-bold text-gray-800">Order Details</h2>
         <div class="my-4">
-            @php
-                $dummyOrderItems = [
-                    [
-                        'name' => 'Nasi Goreng Spesial',
-                        'price' => 35000,
-                        'quantity' => 2,
-                        'image' => 'food-sample.jpg',
-                    ],
-                    [
-                        'name' => 'Ayam Bakar Madu',
-                        'price' => 45000,
-                        'quantity' => 1,
-                        'image' => 'food-sample2.jpg',
-                    ],
-                    [
-                        'name' => 'Es Teh Manis',
-                        'price' => 8000,
-                        'quantity' => 3,
-                        'image' => 'food-sample3.jpg',
-                    ],
-                ];
-            @endphp
-
-            @foreach ($dummyOrderItems as $item)
+            @foreach ($OrderItems as $item)
                 <div class="mb-4 rounded-lg bg-white p-4 shadow">
                     <div class="flex items-center gap-3">
                         <div class="h-16 w-16 overflow-hidden rounded-md">
@@ -52,11 +29,13 @@
                                     {{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }}</p>
                                 <div class="flex items-center gap-2">
                                     <button
+                                        wire:click="$dispatch('decrement-quantity', { itemId: {{ $item['id'] }} })"
                                         class="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-gray-700 hover:bg-blue-500 hover:text-white">
                                         <i class="fas fa-minus text-xs"></i>
                                     </button>
                                     <span class="w-4 text-center text-sm">{{ $item['quantity'] }}</span>
                                     <button
+                                        wire:click="$dispatch('increment-quantity', { itemId: {{ $item['id'] }} })"
                                         class="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-gray-700 hover:bg-blue-500 hover:text-white">
                                         <i class="fas fa-plus text-xs"></i>
                                     </button>
@@ -66,6 +45,9 @@
                     </div>
                 </div>
             @endforeach
+            @if (empty($OrderItems))
+                <p class="text-sm text-gray-600">No items in cart</p>
+            @endif
         </div>
 
         <!-- Order Summary -->
@@ -74,19 +56,19 @@
                 <div class="flex justify-between">
                     <p class="text-sm text-gray-600">Subtotal:</p>
                     <p class="text-sm text-gray-800">Rp
-                        {{ number_format(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $dummyOrderItems)), 0, ',', '.') }}
+                        {{ number_format(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $OrderItems)), 0, ',', '.') }}
                     </p>
                 </div>
                 <div class="flex justify-between">
                     <p class="text-sm text-gray-600">Tax (10%):</p>
                     <p class="text-sm text-gray-800">Rp
-                        {{ number_format(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $dummyOrderItems)) * 0.1, 0, ',', '.') }}
+                        {{ number_format(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $OrderItems)) * 0.1, 0, ',', '.') }}
                     </p>
                 </div>
                 <div class="flex justify-between border-t border-gray-200 pt-2">
                     <p class="text-sm font-bold text-gray-800">Total:</p>
                     <p class="text-sm font-bold text-blue-600">Rp
-                        {{ number_format(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $dummyOrderItems)) * 1.1, 0, ',', '.') }}
+                        {{ number_format(array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $OrderItems)) * 1.1, 0, ',', '.') }}
                     </p>
                 </div>
             </div>

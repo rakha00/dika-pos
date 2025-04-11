@@ -47,13 +47,13 @@
                         {{ number_format($item->price, 0, ',', '.') }}</p>
                     <!-- Quantity Control -->
                     <div class="flex flex-shrink-0 items-center justify-end">
-                        <button
+                        <button wire:click="$dispatch('decrement-quantity', { itemId: {{ $item->id }} })"
                             class="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-gray-700 transition-colors hover:bg-blue-500 hover:text-white md:h-8 md:w-8">
                             <i class="fas fa-minus text-xs md:text-sm"></i>
                         </button>
                         <span
-                            class="mx-1 w-4 text-center text-xs font-medium sm:mx-2 sm:w-5 md:mx-2 md:w-6 md:text-sm">0</span>
-                        <button
+                            class="mx-1 w-4 text-center text-xs font-medium sm:mx-2 sm:w-5 md:mx-2 md:w-6 md:text-sm">{{ $quantities[$item->id] ?? 0 }}</span>
+                        <button wire:click="$dispatch('increment-quantity', { itemId: {{ $item->id }} })"
                             class="flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-gray-700 transition-colors hover:bg-blue-500 hover:text-white md:h-8 md:w-8">
                             <i class="fas fa-plus text-xs md:text-sm"></i>
                         </button>

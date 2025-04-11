@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Filament\Resources\TransaksiResource\Pages;
+namespace App\Filament\Resources\TransactionResource\Pages;
 
-use App\Filament\Resources\TransaksiResource;
+use App\Filament\Resources\TransactionResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditTransaksi extends EditRecord
+class EditTransaction extends EditRecord
 {
     protected static string $resource = TransaksiResource::class;
 

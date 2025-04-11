@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\LaporanHarianResource\Pages;
-use App\Filament\Resources\LaporanHarianResource\RelationManagers;
-use App\Models\LaporanHarian;
+use App\Filament\Resources\DailyReportResource\Pages;
+use App\Filament\Resources\DailyReportResource\RelationManagers;
+use App\Models\DailyReport;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class LaporanHarianResource extends Resource
+class DailyReportResource extends Resource
 {
-    protected static ?string $model = LaporanHarian::class;
+    protected static ?string $model = DailyReport::class;
 
     protected static ?string $modelLabel = 'Laporan Harian';
 
@@ -27,12 +27,12 @@ class LaporanHarianResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\DatePicker::make('tanggal')
+                Forms\Components\DatePicker::make('date')
                     ->required(),
-                Forms\Components\TextInput::make('total_transaksi')
+                Forms\Components\TextInput::make('total_transactions')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('total_penjualan')
+                Forms\Components\TextInput::make('total_sales')
                     ->required()
                     ->numeric(),
             ]);
@@ -42,13 +42,13 @@ class LaporanHarianResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('tanggal')
+                Tables\Columns\TextColumn::make('date')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('total_transaksi')
+                Tables\Columns\TextColumn::make('total_transactions')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('total_penjualan')
+                Tables\Columns\TextColumn::make('total_sales')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -83,9 +83,9 @@ class LaporanHarianResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListLaporanHarians::route('/'),
-            'create' => Pages\CreateLaporanHarian::route('/create'),
-            'edit' => Pages\EditLaporanHarian::route('/{record}/edit'),
+            'index' => Pages\ListDailyReports::route('/'),
+            'create' => Pages\CreateDailyReport::route('/create'),
+            'edit' => Pages\EditDailyReport::route('/{record}/edit'),
         ];
     }
 }

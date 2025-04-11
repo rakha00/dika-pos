@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('id_user');
             $table->foreign('id_user')->references('id')->on('users');
-            $table->dateTime('transaction_date');
+            // $table->dateTime('transaction_date');
             $table->decimal('total_price', 12, 2);
             $table->string('status')->default('pending');
             $table->timestamps();
@@ -26,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('transaksis');
+        Schema::dropIfExists('transactions');
     }
 };
