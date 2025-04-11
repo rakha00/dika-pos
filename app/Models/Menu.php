@@ -10,5 +10,12 @@ class Menu extends Model
     /** @use HasFactory<\Database\Factories\MenuFactory> */
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'description',
+        'image',
+        'category',
+        'price',
+        'stock'
+    ];
 }

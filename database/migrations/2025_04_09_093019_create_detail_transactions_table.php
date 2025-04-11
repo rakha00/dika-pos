@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('id_menu');
             $table->foreign('id_menu')->references('id')->on('menus')->onDelete('cascade');
             $table->integer('quantity');
-            $table->decimal('subtotal', 12, 2);
+            $table->unsignedBigInteger('subtotal');
             $table->timestamps();
         });
     }

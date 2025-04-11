@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('category');
             $table->string('description')->nullable();
             $table->string('image')->nullable();
-            $table->decimal('price', 10, 2);
+            $table->unsignedBigInteger('price');
             $table->integer('stock');
             $table->timestamps();
         });

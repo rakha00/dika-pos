@@ -14,9 +14,10 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('id_user');
             $table->foreign('id_user')->references('id')->on('users');
-            // $table->dateTime('transaction_date');
-            $table->decimal('total_price', 12, 2);
-            $table->string('status')->default('pending');
+            $table->string('id_transaction');
+            $table->string('customer_name');
+            $table->unsignedBigInteger('total_price');
+            $table->string('status');
             $table->timestamps();
         });
     }
