@@ -6,10 +6,10 @@
         <livewire:cart />
 
         <!-- Main Content -->
-        <div class="overflow-x-hidden">
+        <div class="w-full overflow-x-hidden">
 
             <!-- Order List Section -->
-            <x-order.order-list />
+            <livewire:order-list />
 
             <!-- Order Menu Section -->
             <livewire:order-menu />
