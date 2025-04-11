@@ -18,10 +18,11 @@ class MenuFactory extends Factory
     {
         return [
             'nama_menu' => fake()->sentence(1),
-            'kategori' => fake()->randomElement(['Makanan', 'Minuman']),
+            'deskripsi' => fake()->sentence(3),
+            'image' => fake()->imageUrl(640, 480, 'food'),
+            'kategori' => fake()->randomElement(['Makanan', 'Minuman', 'Dessert', 'Snacks']),
             'harga' => fake()->numberBetween(5000, 50000),
             'stok' => fake()->randomNumber(2),
-            'status_tersedia' => true,
         ];
     }
 }

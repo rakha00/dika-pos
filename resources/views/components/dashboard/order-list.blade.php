@@ -73,6 +73,8 @@
     ];
 @endphp
 
+<h2 class="m-6 text-2xl font-bold text-gray-800">Order List</h2>
+
 <div class="ml-6 flex flex-row space-x-4 overflow-x-auto pb-4">
     @foreach ($dummyOrders as $order)
         <div class="w-64 flex-shrink-0 rounded-lg bg-white shadow-md">
