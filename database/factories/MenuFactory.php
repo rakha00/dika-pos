@@ -17,12 +17,12 @@ class MenuFactory extends Factory
     public function definition(): array
     {
         return [
-            'nama_menu' => fake()->sentence(1),
-            'deskripsi' => fake()->sentence(3),
+            'name' => fake()->sentence(1),
+            'description' => fake()->sentence(3),
             'image' => fake()->imageUrl(640, 480, 'food'),
-            'kategori' => fake()->randomElement(['Makanan', 'Minuman', 'Dessert', 'Snacks']),
-            'harga' => fake()->numberBetween(5000, 50000),
-            'stok' => fake()->randomNumber(2),
+            'category' => fake()->randomElement(['Makanan', 'Minuman', 'Dessert', 'Snacks']),
+            'price' => fake()->numberBetween(5000, 50000),
+            'stock' => fake()->randomNumber(2),
         ];
     }
 }

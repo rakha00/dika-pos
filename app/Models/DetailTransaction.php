@@ -5,20 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DetailTransaksi extends Model
+class DetailTransaction extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'id_transaksi',
+        'id_transaction',
         'id_menu',
-        'jumlah',
+        'quantity',
         'subtotal',
     ];
 
-    public function transaksi()
+    public function transaction()
     {
-        return $this->belongsTo(Transaksi::class);
+        return $this->belongsTo(Transaction::class);
     }
 
     public function menu()

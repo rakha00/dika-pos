@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LaporanHarian extends Model
+class DailyReport extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'tanggal',
-        'total_transaksi',
-        'total_penjualan',
+        'date',
+        'total_transactions',
+        'total_sales',
         'id_user',
     ];
 }

@@ -14,12 +14,12 @@ class OrderMenu extends Component
 
     public function mount()
     {
-        $this->menuItems = Menu::where('kategori', $this->selectedCategory)->get();
+        $this->menuItems = Menu::where('category', $this->selectedCategory)->get();
     }
 
     public function updated($selectedCategory)
     {
-        $this->menuItems = Menu::where('kategori', $this->$selectedCategory)->get();
+        $this->menuItems = Menu::where('category', $this->$selectedCategory)->get();
     }
 
     public function render()

@@ -29,22 +29,22 @@
             <div class="flex h-full flex-col rounded-lg bg-white p-3 shadow-md sm:p-4" wire:key="{{ $item->id }}">
                 <div class="flex flex-col gap-2 sm:flex-row">
                     <div class="overflow-hidden rounded-lg sm:w-1/3">
-                        <img src="{{ $item->image }}" alt="{{ $item->nama_menu }}"
+                        <img src="{{ $item->image }}" alt="{{ $item->name }}"
                             class="h-40 w-full object-cover object-center sm:h-full">
                     </div>
                     <div class="sm:w-2/3">
                         <h3 class="line-clamp-1 text-lg font-semibold text-gray-800 sm:text-xl">
-                            {{ $item->nama_menu }}
+                            {{ $item->name }}
                         </h3>
                         <p class="mt-1 line-clamp-2 text-xs text-gray-600 sm:text-sm">
-                            {{ $item->deskripsi }}
+                            {{ $item->description }}
                         </p>
-                        <p class="mt-2 text-xs text-gray-500 sm:text-sm">Stok: {{ $item->stok }}</p>
+                        <p class="mt-2 text-xs text-gray-500 sm:text-sm">Stok: {{ $item->stock }}</p>
                     </div>
                 </div>
                 <div class="mt-auto flex items-center justify-between pt-3">
                     <p class="flex-shrink-0 text-base font-bold text-blue-600 sm:text-lg md:text-xl">Rp
-                        {{ number_format($item->harga, 0, ',', '.') }}</p>
+                        {{ number_format($item->price, 0, ',', '.') }}</p>
                     <!-- Quantity Control -->
                     <div class="flex flex-shrink-0 items-center justify-end">
                         <button

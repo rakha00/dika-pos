@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Transaksi extends Model
+class Transaction extends Model
 {
     use HasFactory;
 
@@ -21,8 +21,8 @@ class Transaksi extends Model
         return $this->belongsTo(User::class, 'id_user');
     }
 
-    public function detail_transaksis()
+    public function detail_transactions()
     {
-        return $this->hasMany(DetailTransaksi::class, 'id_transaksi');
+        return $this->hasMany(DetailTransaction::class, 'id_transaction');
     }
 }
