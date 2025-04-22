@@ -28,4 +28,14 @@ class Transaction extends Model
     {
         return $this->hasMany(DetailTransaction::class, 'id_transaction');
     }
+
+    // Custom accessor to calculate the total price, including custom options
+    public function getTotalPriceWithCustomizationAttribute()
+    {
+        $total = $this->detailTransactions->sum(function ($detail) {
+            return $detail->subtotal + $detail->menu->customizationOptions->sum('additional_price');
+        });
+
+        return $total * 1.1;  // Example: add 10% tax
+    }
 }
