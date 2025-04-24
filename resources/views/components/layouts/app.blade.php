@@ -13,6 +13,7 @@
 
     <!-- Icons -->
     <script src="https://kit.fontawesome.com/ff1d767ea6.js" crossorigin="anonymous"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
 
     <!-- Styles -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
