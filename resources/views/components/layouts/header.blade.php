@@ -56,16 +56,41 @@
                 </div>
             </div>
 
-            <div class="flex items-center space-x-4">
-                <div class="relative">
-                    <button
+            <div class="z-50 flex items-center space-x-4">
+                <div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open"
                         class="flex h-8 w-8 items-center justify-center rounded-full text-gray-600 hover:text-blue-600">
                         <i class="fas fa-bell"></i>
                         <span
                             class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">3</span>
                     </button>
+                    <div x-show="open" @click.away="open = false"
+                        class="absolute right-0 mt-2 w-48 rounded-md bg-white py-1 shadow-lg">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Notification
+                            1</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Notification
+                            2</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Notification
+                            3</a>
+                    </div>
                 </div>
-                <img src="{{ asset('images/user.png') }}" alt="User Profile" class="h-8 w-8 rounded-full">
+                <div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open" class="flex items-center">
+                        <img src="{{ auth()->user()->image ? asset('storage/' . auth()->user()->image) : asset('storage/profile-photos/default.png') }}"
+                            alt="User Profile" class="h-8 w-8 rounded-full object-cover">
+                    </button>
+                    <div x-show="open" @click.away="open = false"
+                        class="absolute right-0 mt-2 w-48 rounded-md bg-white py-1 shadow-lg">
+                        <a href="{{ route('profile') }}"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                        <form action="{{ route('profile.logout') }}" method="POST">
+                            @csrf
+                            <button type="submit"
+                                class="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">Sign
+                                out</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

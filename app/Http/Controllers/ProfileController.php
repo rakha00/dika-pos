@@ -10,11 +10,14 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 class ProfileController extends Controller
 {
-    public function index(): View
+    public function edit(Request $request): View
     {
         return view('profile');
     }
 
+    /**
+     * Update the user's profile information.
+     */
     public function update(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -35,6 +38,9 @@ class ProfileController extends Controller
         return Redirect::route('profile')->with('status', 'profile-updated');
     }
 
+    /**
+     * Update the user's password.
+     */
     public function updatePassword(Request $request): RedirectResponse
     {
         $validated = $request->validate([

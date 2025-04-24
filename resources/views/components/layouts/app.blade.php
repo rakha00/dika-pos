@@ -17,7 +17,7 @@
 
     <!-- Styles -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
     <style>
         /* Pastikan modal berada di atas konten lainnya */
@@ -46,12 +46,14 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
     </style>
+    @livewireStyles
 </head>
 
 <body>
 
     {{ $slot }}
 
+    @livewireScripts
 </body>
 
 </html>

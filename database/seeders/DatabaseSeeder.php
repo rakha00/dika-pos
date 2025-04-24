@@ -24,6 +24,20 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
         ]);
 
+        User::factory()->create([
+            'name' => 'cashier',
+            'email' => 'cashier@gmail.com',
+            'password' => Hash::make('cashier'),
+            'role' => 'cashier',
+        ]);
+
+        User::factory()->create([
+            'name' => 'chef',
+            'email' => 'chef@gmail.com',
+            'password' => Hash::make('chef'),
+            'role' => 'chef',
+        ]);
+
         Menu::factory(30)->create();
     }
 }
