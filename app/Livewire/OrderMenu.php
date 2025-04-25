@@ -41,6 +41,12 @@ class OrderMenu extends Component
         $this->quantities[$itemId]++;
     }
 
+    #[On('transaction-success')]
+    public function resetQty()
+    {
+        $this->quantities = [];
+    }
+
     public function render()
     {
         return view('components.order.order-menu');

@@ -18,6 +18,7 @@ class Cart extends Component
     public $isModalOpen = false;
     public $currentItemId;
     public $customOptions = [];
+    public $currentItemIndex;
 
     public function mount()
     {
@@ -51,36 +52,41 @@ class Cart extends Component
         $menu = Menu::find($itemId);
         if (!$menu) return;
 
-        // Check if item already exists in cart
-        $itemKey = $this->findItemKey($itemId);
+        $normalizedOptions = is_array($customOptions) ? array_map('strval', $customOptions) : [];
+        ksort($normalizedOptions);
 
-        if ($itemKey !== false) {
-            // Update custom options if provided
-            if ($customOptions) {
-                $this->orderItems[$itemKey]['customOptions'] = $customOptions;
-            }
-            $this->orderItems[$itemKey]['quantity']++;
-        } else {
-            // Add new item to cart with custom options if provided
-            $this->orderItems[] = [
-                'id' => $menu->id,
-                'name' => $menu->name,
-                'price' => $menu->price,
-                'quantity' => 1,
-                'image' => $menu->image,
-                'is_customizable' => $menu->is_customizable,
-                'customOptions' => $customOptions ?? [], // Add custom options if available
-            ];
-        }
+        $additionalPrice = \App\Models\CustomOptionValue::whereIn('id', $normalizedOptions)->sum('additional_price');
+        $newPrice = $menu->price + $additionalPrice;
+
+        $this->orderItems[] = [
+            'id' => $menu->id,
+            'name' => $menu->name,
+            'price' => $newPrice,
+            'quantity' => 1,
+            'image' => $menu->image,
+            'is_customizable' => $menu->is_customizable,
+            'customOptionsList' => [$normalizedOptions],
+        ];
     }
 
-    private function findItemKey(int $itemId)
+
+    private function findItemKey(int $itemId, $customOptions = null)
     {
+        $normalizedIncoming = is_array($customOptions) ? $customOptions : [];
+        ksort($normalizedIncoming);
+
         foreach ($this->orderItems as $key => $item) {
-            if (isset($item['id']) && $item['id'] == $itemId) {
+            $storedOptions = $item['customOptionsList'][0] ?? [];
+            ksort($storedOptions);
+
+            if (
+                $item['id'] == $itemId &&
+                $storedOptions == $normalizedIncoming
+            ) {
                 return $key;
             }
         }
+
         return false;
     }
 
@@ -119,13 +125,13 @@ class Cart extends Component
                 'id_menu' => $item['id'],
                 'quantity' => $item['quantity'],
                 'subtotal' => $item['price'] * $item['quantity'],
-                'custom_options' => json_encode($item['customOptions']), // Simpan semua pilihan custom options
+                'custom_options' => isset($item['customOptionsList'][0]) ? json_encode($item['customOptionsList'][0]) : json_encode([]),
             ]);
         }
 
-        // Clear cart after transaction
         $this->orderItems = [];
         $this->customerName = '';
+        $this->dispatch('transaction-success');
     }
 
     public function getCurrentItemNameProperty()
@@ -136,40 +142,35 @@ class Cart extends Component
 
     public function addCustomOptions(int $itemId)
     {
-        $itemKey = $this->findItemKey($itemId);
+        if (isset($this->orderItems[$this->currentItemIndex])) {
+            $this->orderItems[$this->currentItemIndex]['customOptionsList'] = $this->selectedOption;
 
-        if ($itemKey !== false) {
-            // Hitung tambahan harga dari selectedOption
-            $additionalPrice = \App\Models\CustomOptionValue::whereIn('id', $this->selectedOption)->sum('additional_price');
-
+            // Update price
+            $optionIds = collect($this->selectedOption[0] ?? [])->values()->all();
+            $additionalPrice = \App\Models\CustomOptionValue::whereIn('id', $optionIds)->sum('additional_price');
             $basePrice = Menu::find($itemId)->price;
-            $newPrice = $basePrice + $additionalPrice;
-
-            // Update custom options dan harga baru
-            $this->orderItems[$itemKey]['customOptions'] = $this->selectedOption;
-            $this->orderItems[$itemKey]['price'] = $newPrice;
+            $this->orderItems[$this->currentItemIndex]['price'] = $basePrice + $additionalPrice;
         }
 
         $this->isModalOpen = false;
     }
 
-    public function showCustomizeModal($itemId)
+    public function showCustomizeModal($itemId, $index)
     {
         $this->isModalOpen = true;
         $this->currentItemId = $itemId;
+        $this->currentItemIndex = $index;
 
         $menu = Menu::with('customOptions.customOptionValues')->find($itemId);
-
         if ($menu && $menu->is_customizable) {
             $this->customOptions = $menu->customOptions;
         }
 
-        // Ambil custom_option_value yang sudah dipilih, jika ada
-        $itemKey = $this->findItemKey($itemId);
-        if ($itemKey !== false && isset($this->orderItems[$itemKey]['customOptions'])) {
-            $this->selectedOption = $this->orderItems[$itemKey]['customOptions'];
+        // Langsung ambil berdasarkan index, bukan pakai findItemKey
+        if (isset($this->orderItems[$index])) {
+            $this->selectedOption = $this->orderItems[$index]['customOptionsList'];
         } else {
-            $this->selectedOption = [];  // Reset jika tidak ada pilihan
+            $this->selectedOption = [];
         }
     }
 
