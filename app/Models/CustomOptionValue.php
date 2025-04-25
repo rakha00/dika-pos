@@ -17,6 +17,11 @@ class CustomOptionValue extends Model
         'additional_price',
     ];
 
+    public function customOptionValues()
+    {
+        return $this->belongsTo(CustomOption::class, 'custom_option_id');
+    }
+
     public function customOption()
     {
         return $this->belongsTo(CustomOption::class, 'custom_option_id');

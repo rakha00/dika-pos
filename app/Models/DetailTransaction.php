@@ -27,22 +27,20 @@ class DetailTransaction extends Model
         return $this->belongsTo(Menu::class, 'id_menu');
     }
 
-    // Custom method to calculate subtotal, considering customization
     public function getSubtotalAttribute()
     {
         $menu = $this->menu;
 
-        // Check if the menu is customizable
         $customizationPrice = 0;
-        if ($menu->is_customizable) {
+        if ($menu->is_customizable && $menu->customizationOptions) {
             $customizationPrice = $this->menu->customizationOptions->sum('additional_price');
         }
 
         return ($this->quantity * $menu->price) + $customizationPrice;
     }
 
-    public function customOptions()
+    public function detailCustomOptions()
     {
-        return $this->hasMany(DetailCustomOption::class);
+        return $this->hasMany(DetailCustomOption::class, 'detail_transaction_id');
     }
 }

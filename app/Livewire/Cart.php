@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\DetailTransaction;
+use App\Models\DetailCustomOption;
 use App\Models\Menu;
 use App\Models\Transaction;
 use Livewire\Attributes\On;
@@ -22,8 +23,8 @@ class Cart extends Component
 
     public function mount()
     {
-        $this->orderItems = [];  // Initialize the orderItems array
-        $this->totalPrice = 0;   // Initialize totalPrice
+        $this->orderItems = [];
+        $this->totalPrice = 0;
     }
 
     #[On('decrement-quantity')]
@@ -32,15 +33,12 @@ class Cart extends Component
         $menu = Menu::find($itemId);
         if (!$menu) return;
 
-        // Check if item already exists in cart
         $itemKey = $this->findItemKey($itemId);
 
         if ($itemKey !== false) {
-            // If quantity is 1, remove the item
             if ($this->orderItems[$itemKey]['quantity'] <= 1) {
                 array_splice($this->orderItems, $itemKey, 1);
             } else {
-                // Otherwise decrease quantity
                 $this->orderItems[$itemKey]['quantity']--;
             }
         }
@@ -68,7 +66,6 @@ class Cart extends Component
             'customOptionsList' => [$normalizedOptions],
         ];
     }
-
 
     private function findItemKey(int $itemId, $customOptions = null)
     {
@@ -120,17 +117,27 @@ class Cart extends Component
         ]);
 
         foreach ($this->orderItems as $item) {
-            DetailTransaction::create([
+            $detailTransaction = DetailTransaction::create([
                 'id_transaction' => $transaction->id,
                 'id_menu' => $item['id'],
                 'quantity' => $item['quantity'],
                 'subtotal' => $item['price'] * $item['quantity'],
                 'custom_options' => isset($item['customOptionsList'][0]) ? json_encode($item['customOptionsList'][0]) : json_encode([]),
             ]);
+
+            if (isset($item['customOptionsList'][0])) {
+                foreach ($item['customOptionsList'][0] as $optionId) {
+                    DetailCustomOption::create([
+                        'detail_transaction_id' => $detailTransaction->id,
+                        'custom_option_value_id' => $optionId,
+                    ]);
+                }
+            }
         }
 
         $this->orderItems = [];
         $this->customerName = '';
+
         $this->dispatch('transaction-success');
     }
 
@@ -145,7 +152,6 @@ class Cart extends Component
         if (isset($this->orderItems[$this->currentItemIndex])) {
             $this->orderItems[$this->currentItemIndex]['customOptionsList'] = $this->selectedOption;
 
-            // Update price
             $optionIds = collect($this->selectedOption[0] ?? [])->values()->all();
             $additionalPrice = \App\Models\CustomOptionValue::whereIn('id', $optionIds)->sum('additional_price');
             $basePrice = Menu::find($itemId)->price;
@@ -166,14 +172,12 @@ class Cart extends Component
             $this->customOptions = $menu->customOptions;
         }
 
-        // Langsung ambil berdasarkan index, bukan pakai findItemKey
         if (isset($this->orderItems[$index])) {
             $this->selectedOption = $this->orderItems[$index]['customOptionsList'];
         } else {
             $this->selectedOption = [];
         }
     }
-
 
     public function closeModal()
     {

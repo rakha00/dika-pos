@@ -14,7 +14,7 @@
             <a href="{{ route('order') }}" class="flex items-center font-medium text-gray-700 hover:text-blue-600">
                 <i class="fas fa-clipboard-list mr-2"></i>Order List
             </a>
-            <a href="@{{ route('history') }}" class="flex items-center font-medium text-gray-700 hover:text-blue-600">
+            <a href="{{ route('history') }}" class="flex items-center font-medium text-gray-700 hover:text-blue-600">
                 <i class="fas fa-history mr-2"></i>History
             </a>
             <a href="@{{ route('bills') }}" class="flex items-center font-medium text-gray-700 hover:text-blue-600">

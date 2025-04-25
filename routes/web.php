@@ -8,3 +8,6 @@ Route::get('/', function () {
 Route::get('/order', function () {
     return view('order');
 })->name('order');
+Route::get('/history', function () {
+    return view('history');
+})->name('history');
