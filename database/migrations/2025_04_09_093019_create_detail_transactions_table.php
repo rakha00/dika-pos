@@ -12,10 +12,8 @@ return new class extends Migration {
     {
         Schema::create('detail_transactions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_transaction');
-            $table->foreign('id_transaction')->references('id')->on('transactions')->onDelete('cascade');
-            $table->unsignedBigInteger('id_menu');
-            $table->foreign('id_menu')->references('id')->on('menus')->onDelete('cascade');
+            $table->foreignId('transaction_id')->constrained()->onDelete('cascade');
+            $table->foreignId('menu_id')->constrained()->onDelete('cascade');
             $table->integer('quantity');
             $table->unsignedBigInteger('subtotal');
             $table->timestamps();

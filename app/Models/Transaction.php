@@ -12,8 +12,8 @@ class Transaction extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id_user',
-        'id_transaction',
+        'user_id',
+        'transaction_id',
         'customer_name',
         'total_price',
         'status'
@@ -21,21 +21,11 @@ class Transaction extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'id_user');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function detailTransactions(): HasMany
     {
-        return $this->hasMany(DetailTransaction::class, 'id_transaction');
-    }
-
-    // Custom accessor to calculate the total price, including custom options
-    public function getTotalPriceWithCustomizationAttribute()
-    {
-        $total = $this->detailTransactions->sum(function ($detail) {
-            return $detail->subtotal + $detail->menu->customizationOptions->sum('additional_price');
-        });
-
-        return $total * 1.1;  // Example: add 10% tax
+        return $this->hasMany(DetailTransaction::class, 'transaction_id');
     }
 }

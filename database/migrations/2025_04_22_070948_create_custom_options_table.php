@@ -10,11 +10,13 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('daily_reports', function (Blueprint $table) {
+        Schema::create('custom_options', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
-            $table->integer('total_transactions');
-            $table->decimal('total_sales', 12, 2);
+            $table->foreignId('menu_id')->constrained()->onDelete('cascade');
+            $table->string('category');
+            $table->string('value');
+            $table->enum('type', ['radio', 'checkbox']);
+            $table->unsignedBigInteger('additional_price');
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('daily_reports');
+        Schema::dropIfExists('custom_option_values');
     }
 };

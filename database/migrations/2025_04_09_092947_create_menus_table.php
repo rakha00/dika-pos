@@ -18,7 +18,6 @@ return new class extends Migration {
             $table->string('image')->nullable();
             $table->unsignedBigInteger('price');
             $table->integer('stock');
-            $table->boolean('is_customizable')->default(false);
             $table->timestamps();
         });
     }

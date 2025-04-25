@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,7 +13,7 @@ return new class extends Migration
         Schema::create('detail_custom_options', function (Blueprint $table) {
             $table->id();
             $table->foreignId('detail_transaction_id')->constrained()->onDelete('cascade');
-            $table->foreignId('custom_option_value_id')->constrained()->onDelete('cascade');
+            $table->foreignId('custom_option_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

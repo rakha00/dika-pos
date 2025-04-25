@@ -56,7 +56,7 @@
                 </div>
             </div>
 
-            <div class="z-50 flex items-center space-x-4">
+            <div class="z-10 flex items-center space-x-4">
                 <div x-data="{ open: false }" class="relative">
                     <button @click="open = !open"
                         class="flex h-8 w-8 items-center justify-center rounded-full text-gray-600 hover:text-blue-600">

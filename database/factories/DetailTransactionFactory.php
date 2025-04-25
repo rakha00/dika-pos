@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Menu;
+use App\Models\Transaction;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,10 @@ class DetailTransactionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'transaction_id' => fake()->randomElement(Transaction::all()->pluck('id')->toArray()),
+            'menu_id' => fake()->randomElement(Menu::all()->pluck('id')->toArray()),
+            'quantity' => fake()->numberBetween(1, 10),
+            'subtotal' => fake()->numberBetween(5000, 50000),
         ];
     }
 }

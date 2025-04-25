@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\DetailTransaction;
 use App\Models\Menu;
+use App\Models\Transaction;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,29 +17,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'admin',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('admin'),
-            'role' => 'admin',
+        $this->call([
+            UserSeeder::class,
+            MenuSeeder::class,
         ]);
 
-        User::factory()->create([
-            'name' => 'cashier',
-            'email' => 'cashier@gmail.com',
-            'password' => Hash::make('cashier'),
-            'role' => 'cashier',
-        ]);
+        // Transaction::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'chef',
-            'email' => 'chef@gmail.com',
-            'password' => Hash::make('chef'),
-            'role' => 'chef',
-        ]);
+        // DetailTransaction::factory(50)->create();
 
-        Menu::factory(30)->create();
+
     }
 }

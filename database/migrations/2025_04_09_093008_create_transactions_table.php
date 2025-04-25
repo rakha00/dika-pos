@@ -12,12 +12,11 @@ return new class extends Migration {
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_user');
-            $table->foreign('id_user')->references('id')->on('users');
-            $table->string('id_transaction');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('transaction_id');
             $table->string('customer_name');
             $table->unsignedBigInteger('total_price');
-            $table->string('status');
+            $table->enum('status', ['pending', 'completed', 'cancelled']);
             $table->timestamps();
         });
     }

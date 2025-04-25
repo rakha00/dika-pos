@@ -9,21 +9,22 @@ class Menu extends Model
 {
     use HasFactory;
 
-    protected $table = 'menus';
-
     protected $fillable = [
         'name',
+        'category',
+        'description',
+        'image',
         'price',
-        'is_customizable'
+        'stock',
     ];
 
     public function customOptions()
     {
-        return $this->belongsToMany(CustomOption::class, 'menu_custom_option', 'id_menu', 'custom_option_id');
+        return $this->hasMany(CustomOption::class);
     }
 
     public function detailTransactions()
     {
-        return $this->hasMany(DetailTransaction::class); // jika ada relasi transaksi
+        return $this->hasMany(DetailTransaction::class);
     }
 }

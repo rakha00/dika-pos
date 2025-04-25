@@ -15,7 +15,7 @@ class OrderMenu extends Component
 
     public function mount()
     {
-        $this->selectedCategory = "makanan";
+        $this->selectedCategory = "minuman";
         $this->menuItems = Menu::where('category', $this->selectedCategory)->get();
     }
 
@@ -39,12 +39,6 @@ class OrderMenu extends Component
             $this->quantities[$itemId] = 0;
         }
         $this->quantities[$itemId]++;
-    }
-
-    #[On('transaction-success')]
-    public function resetQty()
-    {
-        $this->quantities = [];
     }
 
     public function render()

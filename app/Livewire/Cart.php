@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Models\CustomOption;
+use App\Models\DetailCustomOption;
 use App\Models\DetailTransaction;
 use App\Models\Menu;
 use App\Models\Transaction;
@@ -10,79 +12,26 @@ use Livewire\Component;
 
 class Cart extends Component
 {
+    public $menu;
     public $customerName;
     public $orderItems = [];
     public $totalPrice;
-    public $selectedOption = [];
-    public $currentItemName;
-    public $isModalOpen = false;
-    public $currentItemId;
+    public $listCustomOptions;
+    public $listItemCustom;
+    public $selectedItemIndex;
+    public $selectedOptions = [];
     public $customOptions = [];
-    public $currentItemIndex;
-
+    public $isModalOpen = false;
     public function mount()
     {
-        $this->orderItems = [];  // Initialize the orderItems array
-        $this->totalPrice = 0;   // Initialize totalPrice
+        $this->menu = new Menu();
+        $this->orderItems;
     }
 
-    #[On('decrement-quantity')]
-    public function decrementQuantity(int $itemId)
+    private function findItemKey(int $itemId)
     {
-        $menu = Menu::find($itemId);
-        if (!$menu) return;
-
-        // Check if item already exists in cart
-        $itemKey = $this->findItemKey($itemId);
-
-        if ($itemKey !== false) {
-            // If quantity is 1, remove the item
-            if ($this->orderItems[$itemKey]['quantity'] <= 1) {
-                array_splice($this->orderItems, $itemKey, 1);
-            } else {
-                // Otherwise decrease quantity
-                $this->orderItems[$itemKey]['quantity']--;
-            }
-        }
-    }
-
-    #[On('increment-quantity')]
-    public function incrementQuantity(int $itemId, $customOptions = null)
-    {
-        $menu = Menu::find($itemId);
-        if (!$menu) return;
-
-        $normalizedOptions = is_array($customOptions) ? array_map('strval', $customOptions) : [];
-        ksort($normalizedOptions);
-
-        $additionalPrice = \App\Models\CustomOptionValue::whereIn('id', $normalizedOptions)->sum('additional_price');
-        $newPrice = $menu->price + $additionalPrice;
-
-        $this->orderItems[] = [
-            'id' => $menu->id,
-            'name' => $menu->name,
-            'price' => $newPrice,
-            'quantity' => 1,
-            'image' => $menu->image,
-            'is_customizable' => $menu->is_customizable,
-            'customOptionsList' => [$normalizedOptions],
-        ];
-    }
-
-
-    private function findItemKey(int $itemId, $customOptions = null)
-    {
-        $normalizedIncoming = is_array($customOptions) ? $customOptions : [];
-        ksort($normalizedIncoming);
-
         foreach ($this->orderItems as $key => $item) {
-            $storedOptions = $item['customOptionsList'][0] ?? [];
-            ksort($storedOptions);
-
-            if (
-                $item['id'] == $itemId &&
-                $storedOptions == $normalizedIncoming
-            ) {
+            if (isset($item['id']) && $item['id'] == $itemId) {
                 return $key;
             }
         }
@@ -90,103 +39,191 @@ class Cart extends Component
         return false;
     }
 
-    public function generateTransactionId()
+    #[On('decrement-quantity')]
+    public function decrementQuantity(int $itemId)
     {
-        $today = date('Y-m-d');
-        $latestTransaction = Transaction::whereDate('created_at', $today)
-            ->latest()
-            ->first();
+        $menu = Menu::find($itemId);
+        if (!$menu)
+            return;
 
-        if ($latestTransaction) {
-            $lastId = $latestTransaction->id_transaction;
-            $numericPart = (int) substr($lastId, 1);
-            $newNumericPart = $numericPart + 1;
-        } else {
-            $newNumericPart = 1;
+        $itemKey = $this->findItemKey($itemId);
+
+        if ($itemKey !== false) {
+            if ($this->orderItems[$itemKey]['quantity'] <= 1) {
+                array_splice($this->orderItems, $itemKey, 1);
+            } else {
+                $this->orderItems[$itemKey]['quantity']--;
+                if (isset($this->orderItems[$itemKey]['customOptions'])) {
+                    array_pop($this->orderItems[$itemKey]['customOptions']);
+                }
+            }
         }
 
-        return '#' . str_pad($newNumericPart, 3, '0', STR_PAD_LEFT);
+        $this->handleTotalPrice();
+    }
+
+    #[On('increment-quantity')]
+    public function incrementQuantity(int $itemId)
+    {
+        $menu = Menu::find($itemId);
+        if (!$menu)
+            return;
+
+        $itemKey = $this->findItemKey($itemId);
+
+        if ($itemKey !== false) {
+            $this->orderItems[$itemKey]['quantity']++;
+
+            if (isset($this->orderItems[$itemKey]['customOptions'])) {
+                array_push(
+                    $this->orderItems[$itemKey]['customOptions'],
+                    $menu->customOptions->groupBy('category')
+                        ->map(fn($group) => [
+                            'id' => $group->first()->id,
+                            'value' => $group->first()->value,
+                            'price' => $group->first()->additional_price
+                        ])
+                        ->toArray()
+                );
+            }
+        } else {
+            $this->orderItems[] = [
+                'id' => $menu->id,
+                'name' => $menu->name,
+                'price' => $menu->price,
+                'quantity' => 1,
+                'image' => $menu->image,
+                'customOptions' => $menu->customOptions->isNotEmpty() ? [
+                    $menu->customOptions->groupBy('category')
+                        ->map(fn($group) => [
+                            'id' => $group->first()->id,
+                            'value' => $group->first()->value,
+                            'price' => $group->first()->additional_price
+                        ])
+                        ->toArray()
+                ] : null,
+            ];
+        }
+
+        $this->handleTotalPrice();
+    }
+
+    public function updatedSelectedItemIndex()
+    {
+        $options = $this->listItemCustom[array_keys($this->listItemCustom)[0]]['customOptions'][$this->selectedItemIndex];
+        $this->selectedOptions = array_combine(
+            array_keys($options),
+            array_column($options, 'id')
+        );
+    }
+
+    public function updatedSelectedOptions()
+    {
+        foreach ($this->selectedOptions as $key => $option) {
+            $customOptionById = CustomOption::find($option);
+            data_set($this->orderItems[array_keys($this->listItemCustom)[0]], 'customOptions.' . $this->selectedItemIndex . '.' . $key . '.id', $customOptionById->id);
+            data_set($this->orderItems[array_keys($this->listItemCustom)[0]], 'customOptions.' . $this->selectedItemIndex . '.' . $key . '.value', $customOptionById->value);
+            data_set($this->orderItems[array_keys($this->listItemCustom)[0]], 'customOptions.' . $this->selectedItemIndex . '.' . $key . '.price', $customOptionById->additional_price);
+        }
+        $this->handleTotalPrice();
+    }
+
+    public function handleTotalPrice()
+    {
+        $totalPrice = 0;
+        foreach ($this->orderItems as $item) {
+            $totalPrice += $item['price'] * $item['quantity'];
+            if (isset($item['customOptions'])) {
+                foreach ($item['customOptions'] as $customOptionSet) {
+                    foreach ($customOptionSet as $customOption) {
+                        $totalPrice += $customOption['price'];
+                    }
+                }
+            }
+            $this->handleItemPrice($item);
+        }
+
+        $this->totalPrice = $totalPrice;
+    }
+
+    public function handleItemPrice($item)
+    {
+        $customOptions = [];
+        if (isset($item['customOptions'])) {
+            foreach ($item['customOptions'] as $optionGroup) {
+                foreach ($optionGroup as $option) {
+                    $customOptions[$option['value']] =
+                        ($customOptions[$option['value']] ?? 0) + $option['price'];
+                }
+            }
+        }
+
+        $this->customOptions = $customOptions;
     }
 
     public function processTransaction()
     {
-        $totalPrice = array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $this->orderItems)) * 1.1;
-        $transaction = Transaction::create([
-            'id_user' => auth()->id(),
-            'id_transaction' => $this->generateTransactionId(),
-            'customer_name' => $this->customerName,
-            'total_price' => $totalPrice,
-            'status' => 'pending',
-        ]);
-
-        foreach ($this->orderItems as $item) {
-            DetailTransaction::create([
-                'id_transaction' => $transaction->id,
-                'id_menu' => $item['id'],
-                'quantity' => $item['quantity'],
-                'subtotal' => $item['price'] * $item['quantity'],
-                'custom_options' => isset($item['customOptionsList'][0]) ? json_encode($item['customOptionsList'][0]) : json_encode([]),
+        try {
+            $transaction = Transaction::create([
+                'user_id' => auth()->id(),
+                'transaction_id' => rand(1000000000, 9999999999),
+                'customer_name' => $this->customerName,
+                'total_price' => $this->totalPrice * 1.1,
+                'status' => 'pending',
             ]);
+
+            foreach ($this->orderItems as $item) {
+                $detailTransaction = DetailTransaction::create([
+                    'transaction_id' => $transaction->id,
+                    'menu_id' => $item['id'],
+                    'quantity' => $item['quantity'],
+                    'subtotal' => $item['price'] * $item['quantity'] + (isset($item['customOptions']) ? array_sum(array_column($item['customOptions'], 'price')) : 0),
+                ]);
+
+                if (isset($item['customOptions'])) {
+                    foreach ($item['customOptions'] as $customOptionSet) {
+                        foreach ($customOptionSet as $customOption) {
+                            DetailCustomOption::create([
+                                'detail_transaction_id' => $detailTransaction->id,
+                                'custom_option_id' => $customOption['id'],
+                            ]);
+                        }
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            $this->dispatch('transaction-failed');
+            return;
         }
 
-        $this->orderItems = [];
-        $this->customerName = '';
+
         $this->dispatch('transaction-success');
+        $this->customerName = '';
+        $this->orderItems = [];
     }
 
-    public function getCurrentItemNameProperty()
+    public function showCustomizeModal(int $itemId)
     {
-        $item = collect($this->orderItems)->firstWhere('id', $this->currentItemId);
-        return $item['name'] ?? 'Menu';
-    }
+        $this->selectedItemIndex = 0;
+        $this->listItemCustom = array_filter($this->orderItems, fn($item) => $item['id'] === $itemId);
+        $this->listCustomOptions = Menu::find($itemId)->customOptions;
 
-    public function addCustomOptions(int $itemId)
-    {
-        if (isset($this->orderItems[$this->currentItemIndex])) {
-            $this->orderItems[$this->currentItemIndex]['customOptionsList'] = $this->selectedOption;
+        $options = $this->listItemCustom[array_keys($this->listItemCustom)[0]]['customOptions'][$this->selectedItemIndex];
+        $this->selectedOptions = array_combine(
+            array_keys($options),
+            array_column($options, 'id')
+        );
 
-            // Update price
-            $optionIds = collect($this->selectedOption[0] ?? [])->values()->all();
-            $additionalPrice = \App\Models\CustomOptionValue::whereIn('id', $optionIds)->sum('additional_price');
-            $basePrice = Menu::find($itemId)->price;
-            $this->orderItems[$this->currentItemIndex]['price'] = $basePrice + $additionalPrice;
-        }
-
-        $this->isModalOpen = false;
-    }
-
-    public function showCustomizeModal($itemId, $index)
-    {
         $this->isModalOpen = true;
-        $this->currentItemId = $itemId;
-        $this->currentItemIndex = $index;
-
-        $menu = Menu::with('customOptions.customOptionValues')->find($itemId);
-        if ($menu && $menu->is_customizable) {
-            $this->customOptions = $menu->customOptions;
-        }
-
-        // Langsung ambil berdasarkan index, bukan pakai findItemKey
-        if (isset($this->orderItems[$index])) {
-            $this->selectedOption = $this->orderItems[$index]['customOptionsList'];
-        } else {
-            $this->selectedOption = [];
-        }
     }
 
-
-    public function closeModal()
+    public function hideCustomizeModal()
     {
         $this->isModalOpen = false;
-        $this->currentItemId = null;
-        $this->currentItemName = '';
-        $this->selectedOption = '';
     }
 
     public function render()
     {
-        return view('components.order.cart', [
-            'orderItems' => $this->orderItems
-        ]);
+        return view('components.order.cart');
     }
 }

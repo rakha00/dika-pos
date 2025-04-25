@@ -9,20 +9,16 @@ class CustomOption extends Model
 {
     use HasFactory;
 
-    protected $table = 'custom_options';
-
     protected $fillable = [
-        'name',
-        'type', // misalnya: radio, dropdown, dll
+        'menu_id',
+        'category',
+        'value',
+        'type',
+        'additional_price',
     ];
 
-    public function values()
+    public function menu()
     {
-        return $this->hasMany(CustomOptionValue::class);
-    }
-
-    public function customOptionValues()
-    {
-        return $this->hasMany(CustomOptionValue::class, 'custom_option_id');
+        return $this->belongsTo(Menu::class);
     }
 }
