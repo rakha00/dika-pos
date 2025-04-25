@@ -16,7 +16,11 @@ Route::middleware('auth')->group(function () {
         return view('order');
     })->name('order');
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
+    Route::get("/kitchen", function () {
+        return view("kitchen");
+    })->name("kitchen");
+
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
     Route::post('/profile/logout', [ProfileController::class, 'logout'])->name('profile.logout');
