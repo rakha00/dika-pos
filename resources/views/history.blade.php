@@ -2,6 +2,6 @@
     <x-layouts.header />
 
     <div>
-        @livewire('history-order')
+        <livewire:history-order />
     </div>
 </x-layouts.app>

@@ -4,32 +4,21 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Transaction;
-use Illuminate\Support\Facades\Auth;
 
 class HistoryOrder extends Component
 {
-    public $transactions = [];
+    public $transactions;
     public $transaction;
     public $showModal = false;
 
     public function mount()
     {
-        $this->transactions = Transaction::with([
-            'details.menu',
-            'details.detailCustomOptions.customOptionValue.customOptionValues'
-        ])
-            ->where('id_user', Auth::id())
-            ->latest()
-            ->get();
+        $this->transactions = Transaction::where('user_id', '1')->latest()->get();
     }
 
     public function showDetail($id)
     {
-        $this->transaction = Transaction::with([
-            'details.menu',
-            'details.detailCustomOptions.customOptionValue.customOption',
-        ])->find($id);
-
+        $this->transaction = Transaction::find($id);
         $this->showModal = true;
     }
 
@@ -40,8 +29,6 @@ class HistoryOrder extends Component
 
     public function render()
     {
-        return view('components.history.history-transaction', [
-            'transactions' => $this->transactions
-        ]);
+        return view('components.history.history-transaction');
     }
 }

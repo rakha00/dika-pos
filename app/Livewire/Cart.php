@@ -5,7 +5,6 @@ namespace App\Livewire;
 use App\Models\CustomOption;
 use App\Models\DetailCustomOption;
 use App\Models\DetailTransaction;
-use App\Models\DetailCustomOption;
 use App\Models\Menu;
 use App\Models\Transaction;
 use Livewire\Attributes\On;
@@ -23,6 +22,7 @@ class Cart extends Component
     public $selectedOptions = [];
     public $customOptions = [];
     public $isModalOpen = false;
+    
     public function mount()
     {
         $this->menu = new Menu();
@@ -165,11 +165,19 @@ class Cart extends Component
     public function processTransaction()
     {
         try {
+            $validated = $this->validate([
+                'customerName' => 'required|string|min:3',
+                'totalPrice' => 'required|numeric|min:1'
+            ], [
+                'customerName.required' => 'Nama customer belum diisi!',
+                'totalPrice.required' => 'Item belum diisi!',
+            ]);
+
             $transaction = Transaction::create([
                 'user_id' => auth()->id(),
-                'transaction_id' => rand(1000000000, 9999999999),
-                'customer_name' => $this->customerName,
-                'total_price' => $this->totalPrice * 1.1,
+                'transaction_id' => str_pad(mt_rand(1, 99999999), 10, '0', STR_PAD_LEFT),
+                'customer_name' => $validated['customerName'],
+                'total_price' => $validated['totalPrice'] * 1.1, 
                 'status' => 'pending',
             ]);
 
@@ -193,7 +201,7 @@ class Cart extends Component
                 }
             }
         } catch (\Exception $e) {
-            $this->dispatch('transaction-failed');
+            $this->dispatch('transaction-failed', $e->getMessage());
             return;
         }
 

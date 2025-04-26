@@ -7,6 +7,8 @@ Route::get("/login", function () {
     return redirect("/admin/login");
 })->name("login");
 
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
         return view('dashboard');
@@ -15,6 +17,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/order', function () {
         return view('order');
     })->name('order');
+
+    Route::get("/history", function () {
+        return view("history");
+    })->name("history");
 
     Route::get("/kitchen", function () {
         return view("kitchen");

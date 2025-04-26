@@ -35,8 +35,10 @@
                                                 value="{{ $option->id }}"
                                                 wire:model.change="selectedOptions.{{ $category }}"
                                                 class="form-radio h-4 w-4 text-blue-600">
-                                            <span class="ml-2 text-sm text-gray-700">{{ $option->value }}
-                                                {{ $option->id }}</span>
+                                            <span class="ml-2 text-sm text-gray-700">
+                                                {{ $option->value }}
+                                                {{ $option->additional_price }}
+                                            </span>
                                         </label>
                                     @endforeach
                                 </div>

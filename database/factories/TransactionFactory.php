@@ -19,7 +19,7 @@ class TransactionFactory extends Factory
     {
         return [
             'user_id' => fake()->randomElement(User::all()->pluck('id')->toArray()),
-            'transaction_id' => fake()->unique()->bothify('TX-########'),
+            'transaction_id' => fake()->unique()->bothify('TRX-#####'),
             'customer_name' => fake()->name,
             'total_price' => fake()->randomNumber(5, true),
             'status' => fake()->randomElement(['pending', 'completed', 'cancelled']),

@@ -108,15 +108,15 @@
     </div>
 
     <div x-data="{ show: false }" x-show="show"
-        x-on:transaction-success.window="show = true; setTimeout(() => show = false, 3000)"
+        x-on:transaction-success.window="show = true; setTimeout(() => show = false, 3000); "
         class="fixed right-5 top-5 z-50 rounded-lg bg-green-500 px-4 py-3 text-white shadow-lg">
         Transaksi berhasil disimpan!
     </div>
 
-    <div x-data="{ show: false }" x-show="show"
-        x-on:transaction-failed.window="show = true; setTimeout(() => show = false, 3000)"
+    <div x-data="{ show: false, errorMessage: '' }" x-show="show"
+        x-on:transaction-failed.window="show = true; errorMessage = $event.detail; setTimeout(() => show = false, 3000);"
         class="fixed right-5 top-5 z-50 rounded-lg bg-red-500 px-4 py-3 text-white shadow-lg">
-        Transaksi gagal disimpan!
+        <span x-text="errorMessage || 'Transaksi gagal disimpan!'"></span>
     </div>
 
 </aside>
