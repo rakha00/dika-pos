@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\CustomOption;
 use App\Models\DetailCustomOption;
 use App\Models\DetailTransaction;
+use App\Models\DetailCustomOption;
 use App\Models\Menu;
 use App\Models\Transaction;
 use Livewire\Attributes\On;
