@@ -15,7 +15,7 @@ class OrderMenu extends Component
 
     public function mount()
     {
-        $this->selectedCategory = "minuman";
+        $this->selectedCategory = "makanan";
         $this->menuItems = Menu::where('category', $this->selectedCategory)->get();
     }
 

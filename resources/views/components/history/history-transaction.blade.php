@@ -125,15 +125,15 @@
 
                             <!-- Summary -->
                             <div class="space-y-1 bg-gray-50">
-                                <div class="flex justify-between text-gray-600">
+                                <div class="flex justify-between px-2 text-gray-600">
                                     <span>Subtotal</span>
                                     <span>Rp{{ number_format($transaction->total_price / 1.1, 0, ',', '.') }}</span>
                                 </div>
-                                <div class="flex justify-between text-gray-600">
+                                <div class="flex justify-between px-2 text-gray-600">
                                     <span>PPN (10%)</span>
                                     <span>Rp{{ number_format($transaction->total_price - $transaction->total_price / 1.1, 0, ',', '.') }}</span>
                                 </div>
-                                <div class="flex justify-between border-t pt-1 text-lg font-bold">
+                                <div class="flex justify-between border-t px-2 pt-1 text-lg font-bold">
                                     <span>Total</span>
                                     <span>Rp{{ number_format($transaction->total_price, 0, ',', '.') }}</span>
                                 </div>

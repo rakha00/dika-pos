@@ -176,7 +176,7 @@ class Cart extends Component
 
             $transaction = Transaction::create([
                 'user_id' => auth()->id(),
-                'transaction_id' => str_pad(mt_rand(1, 99999999), 10, '0', STR_PAD_LEFT),
+                'transaction_id' => 'TRX-' . str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT),
                 'customer_name' => $validated['customerName'],
                 'total_price' => $validated['totalPrice'] * 1.1,
                 'status' => 'pending',
@@ -219,6 +219,7 @@ class Cart extends Component
         $this->dispatch('transaction-success');
         $this->customerName = '';
         $this->orderItems = [];
+        $this->totalPrice = 0;
     }
 
     public function showCustomizeModal(int $itemId)
