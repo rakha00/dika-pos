@@ -13,7 +13,7 @@ class HistoryOrder extends Component
 
     public function mount()
     {
-        $this->transactions = Transaction::where('user_id', '1')->latest()->get();
+        $this->transactions = Transaction::where('user_id', auth()->id())->latest()->get();
     }
 
     public function showDetail($id)

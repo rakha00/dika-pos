@@ -7,8 +7,6 @@ Route::get("/login", function () {
     return redirect("/admin/login");
 })->name("login");
 
-
-
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
         return view('dashboard');

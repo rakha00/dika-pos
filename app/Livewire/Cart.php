@@ -22,7 +22,7 @@ class Cart extends Component
     public $selectedOptions = [];
     public $customOptions = [];
     public $isModalOpen = false;
-    
+
     public function mount()
     {
         $this->menu = new Menu();
@@ -164,6 +164,7 @@ class Cart extends Component
 
     public function processTransaction()
     {
+        // dd($this->orderItems);
         try {
             $validated = $this->validate([
                 'customerName' => 'required|string|min:3',
@@ -177,24 +178,34 @@ class Cart extends Component
                 'user_id' => auth()->id(),
                 'transaction_id' => str_pad(mt_rand(1, 99999999), 10, '0', STR_PAD_LEFT),
                 'customer_name' => $validated['customerName'],
-                'total_price' => $validated['totalPrice'] * 1.1, 
+                'total_price' => $validated['totalPrice'] * 1.1,
                 'status' => 'pending',
             ]);
 
             foreach ($this->orderItems as $item) {
+                $customOptionsTotal = 0;
+                if (isset($item['customOptions'])) {
+                    $customOptionsTotal = array_sum(
+                        array_map(
+                            fn($optionSet) => array_sum(array_column($optionSet, 'price')),
+                            $item['customOptions']
+                        )
+                    );
+                }
+
                 $detailTransaction = DetailTransaction::create([
                     'transaction_id' => $transaction->id,
                     'menu_id' => $item['id'],
                     'quantity' => $item['quantity'],
-                    'subtotal' => $item['price'] * $item['quantity'] + (isset($item['customOptions']) ? array_sum(array_column($item['customOptions'], 'price')) : 0),
+                    'subtotal' => $item['price'] * $item['quantity'] + $customOptionsTotal
                 ]);
 
                 if (isset($item['customOptions'])) {
-                    foreach ($item['customOptions'] as $customOptionSet) {
-                        foreach ($customOptionSet as $customOption) {
+                    foreach ($item['customOptions'] as $optionSet) {
+                        foreach ($optionSet as $option) {
                             DetailCustomOption::create([
                                 'detail_transaction_id' => $detailTransaction->id,
-                                'custom_option_id' => $customOption['id'],
+                                'custom_option_id' => $option['id'],
                             ]);
                         }
                     }
@@ -204,7 +215,6 @@ class Cart extends Component
             $this->dispatch('transaction-failed', $e->getMessage());
             return;
         }
-
 
         $this->dispatch('transaction-success');
         $this->customerName = '';
