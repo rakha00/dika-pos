@@ -15,6 +15,10 @@ Route::middleware('auth')->group(function () {
         return view('order');
     })->name('order');
 
+    Route::get('/history', function () {
+        return view('history');
+    })->name('history');
+
     Route::get("/kitchen", function () {
         return view("kitchen");
     })->name("kitchen");
