@@ -1,21 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get("/login", function () {
-    return redirect("/admin/login");
-})->name("login");
-
-Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return view('dashboard');
-    })->name('dashboard');
-
-    Route::get('/order', function () {
-        return view('order');
-    })->name('order');
 Route::get("/login", function () {
     return redirect("/admin/login");
 })->name("login");
