@@ -22,7 +22,7 @@ class HistoryOrder extends Component
             ->latest()
             ->get();
     }
-
+    
     public function showDetail($id)
     {
         $this->transaction = Transaction::with([
