@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/login", function () {
@@ -15,9 +16,9 @@ Route::middleware('auth')->group(function () {
         return view('order');
     })->name('order');
 
-    Route::get('/history', function () {
-        return view('history');
-    })->name('history');
+    Route::get("/history", function () {
+        return view("history");
+    })->name("history");
 
     Route::get("/kitchen", function () {
         return view("kitchen");
