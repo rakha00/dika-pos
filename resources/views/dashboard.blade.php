@@ -1,9 +1,9 @@
 <x-layouts.app>
     <x-layouts.header />
-    <x-order.order-list />
-    @error('error')
+    <livewire:dashboard />
+    <!-- @error('error')
         <div class="alert alert-danger">
             {{ $message }}
         </div>
-    @enderror
+    @enderror -->
 </x-layouts.app>
