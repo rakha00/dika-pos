@@ -23,6 +23,7 @@ class MenuFactory extends Factory
             'category' => fake()->randomElement(['Makanan', 'Minuman', 'Dessert', 'Snacks']),
             'price' => fake()->numberBetween(5000, 50000),
             'stock' => fake()->randomNumber(2),
+            'is_customizable' => fake()->boolean(),
         ];
     }
 }
