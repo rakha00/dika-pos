@@ -40,8 +40,6 @@ class HistoryOrder extends Component
 
     public function render()
     {
-        return view('components.history.history-transaction', [
-            'transactions' => $this->transactions
-        ]);
+        return view('components.history.history-transaction');
     }
 }

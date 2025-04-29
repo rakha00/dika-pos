@@ -1,4 +1,5 @@
 <div>
+    <h2 class="m-6 text-2xl font-bold text-gray-800">Menu</h2>
     <!-- Food Category Navigation -->
     <div class="m-6 rounded-lg bg-white shadow">
         <div class="flex justify-between overflow-x-auto px-4 py-3">
@@ -22,7 +23,6 @@
     </div>
 
     <!-- Menu Section -->
-    <h2 class="m-6 text-2xl font-bold text-gray-800">Menu</h2>
     <div class="mx-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         @foreach ($menuItems as $item)
         <!-- Food Card Item -->

@@ -48,54 +48,101 @@
 
 
     <!-- Modal untuk Detail Transaksi -->
-    @if($showModal)
-    <div class="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 z-50">
-        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-2xl">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-semibold text-gray-800">Detail Transaksi #{{ $transaction->id_transaction }}</h3>
-                <button wire:click="closeModal" class="text-gray-500 hover:text-gray-700 text-2xl font-bold">
-                    &times;
-                </button>
+    @if ($showModal)
+        <div class="fixed inset-0 z-50 flex items-center justify-center">
+            <div class="fixed inset-0 z-50 cursor-pointer bg-black opacity-50" wire:click="closeModal">
             </div>
-
-            <div class="space-y-4 text-gray-700">
-                <!-- Customer Info -->
-                <div>
-                    <p class="font-medium"><strong>Nama Pelanggan:</strong> {{ $transaction->customer_name }}</p>
-                    <p class="font-medium"><strong>Total Harga:</strong> Rp{{ number_format($transaction->total_price, 0, ',', '.') }}</p>
-                    <p class="font-medium"><strong>Tanggal Transaksi:</strong> {{ $transaction->created_at->format('d M Y, H:i') }}</p>
+            <div class="z-100 relative w-full max-w-2xl rounded-lg bg-white p-8 shadow-xl">
+                <div class="mb-2 flex items-center justify-between">
+                    <h3 class="text-xl font-semibold text-gray-800">
+                        Detail Transaksi #{{ $transaction->transaction_id }}
+                    </h3>
+                    <button wire:click="closeModal" class="text-2xl font-bold text-gray-500 hover:text-gray-700">
+                        &times;
+                    </button>
                 </div>
 
-                <!-- Order Details -->
-                <div>
-                    <h4 class="font-semibold text-lg mt-6 mb-2">Detail Menu:</h4>
-                    <ul class="space-y-2">
-                        @foreach($transaction->details as $detail)
-                        <li class="flex justify-between items-center border-b py-2">
-                            <div>
-                                <strong class="text-gray-800">{{ $detail->menu->name }}</strong>
-                                <span class="text-gray-600">- Rp{{ number_format($detail->subtotal, 0, ',', '.') }}</span>
+                <div class="space-y-4 text-gray-700">
+                    <!-- Customer Info -->
+                    <div class="space-y-1">
+                        <div class="flex text-sm">
+                            <p class="w-32 font-medium"><strong>Nama Pelanggan</strong></p>
+                            <p class="font-medium">: {{ $transaction->customer_name }}</p>
+                        </div>
+                        <div class="flex text-sm">
+                            <p class="w-32 font-medium"><strong>Total Harga</strong></p>
+                            <p class="font-medium">: Rp{{ number_format($transaction->total_price, 0, ',', '.') }}
+                            </p>
+                        </div>
+                        <div class="flex text-sm">
+                            <p class="w-32 font-medium"><strong>Tanggal Transaksi</strong></p>
+                            <p class="font-medium">: {{ $transaction->created_at->format('d M Y, H:i') }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Order Details -->
+                    <div>
+                        <h4 class="mb-2 mt-4 text-lg font-semibold">Detail Menu:</h4>
+                        <div class="rounded-lg border p-1">
+                            <!-- Table Header -->
+                            <div class="grid grid-cols-12 gap-4 border-b bg-gray-50 p-2 font-semibold text-gray-700">
+                                <div class="col-span-5">Menu</div>
+                                <div class="col-span-3 text-right">Qty</div>
+                                <div class="col-span-4 text-right">Subtotal</div>
                             </div>
-                            @if($detail->detailCustomOptions->isNotEmpty())
-                            <ul class="ml-4 space-y-1 text-sm text-gray-600">
-                                @foreach($detail->detailCustomOptions as $customOption)
-                                <li>{{ $customOption->customOptionValue->customOption->name }}: Rp{{ number_format($customOption->customOptionValue->additional_price, 0, ',', '.') }}</li>
-                                @endforeach
-                            </ul>
-                            @endif
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
 
-            <div class="mt-6 flex justify-end">
-                <button wire:click="closeModal" class="px-6 py-3 bg-red-600 text-white rounded-full hover:bg-red-700 transition duration-300 ease-in-out">
-                    Tutup
-                </button>
+                            <!-- Table Body -->
+                            <div class="max-h-60 overflow-y-auto">
+                                @foreach ($transaction->detailTransactions as $detail)
+                                    <div class="border-b p-2">
+                                        <div class="grid grid-cols-12 gap-4">
+                                            <div class="col-span-5">
+                                                <p class="font-medium text-gray-800">{{ $detail->menu->name }}
+                                                    (Rp{{ number_format($detail->menu->price, 0, ',', '.') }})
+                                                </p>
+                                                @if ($detail->detailCustomOptions->isNotEmpty())
+                                                    <div class="mt-0.5 space-y-0.5">
+                                                        @if($detail->detailCustomOptions->isNotEmpty())
+                                                        <ul class="ml-4 space-y-1 text-sm text-gray-600">
+                                                            @foreach($detail->detailCustomOptions as $customOption)
+                                                            <li>{{ $customOption->customOptionValue->customOption->name }}: Rp{{ number_format($customOption->customOptionValue->additional_price, 0, ',', '.') }}</li>
+                                                            @endforeach
+                                                        </ul>
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <div class="col-span-3 text-right">
+                                                {{ $detail->quantity }}x
+                                            </div>
+                                            <div class="col-span-4 text-right font-medium">
+                                                Rp{{ number_format($detail->subtotal, 0, ',', '.') }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <!-- Summary -->
+                            <div class="space-y-1 bg-gray-50">
+                                <div class="flex justify-between px-2 text-gray-600">
+                                    <span>Subtotal</span>
+                                    <span>Rp{{ number_format($transaction->total_price / 1.1, 0, ',', '.') }}</span>
+                                </div>
+                                <div class="flex justify-between px-2 text-gray-600">
+                                    <span>PPN (10%)</span>
+                                    <span>Rp{{ number_format($transaction->total_price - $transaction->total_price / 1.1, 0, ',', '.') }}</span>
+                                </div>
+                                <div class="flex justify-between border-t px-2 pt-1 text-lg font-bold">
+                                    <span>Total</span>
+                                    <span>Rp{{ number_format($transaction->total_price, 0, ',', '.') }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
     @endif
 
 </div>
