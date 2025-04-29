@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Menu;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -27,17 +26,19 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'cashier',
             'email' => 'cashier@gmail.com',
-            'password' => Hash::make('cashier'),
+            'password' => Hash::make('admin'),
             'role' => 'cashier',
         ]);
 
         User::factory()->create([
             'name' => 'chef',
             'email' => 'chef@gmail.com',
-            'password' => Hash::make('chef'),
+            'password' => Hash::make('admin'),
             'role' => 'chef',
         ]);
 
-        Menu::factory(30)->create();
+        $this->call([
+            MenuSeeder::class,
+        ]);
     }
 }

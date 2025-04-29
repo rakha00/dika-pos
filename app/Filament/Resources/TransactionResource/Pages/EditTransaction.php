@@ -8,7 +8,7 @@ use Filament\Resources\Pages\EditRecord;
 
 class EditTransaction extends EditRecord
 {
-    protected static string $resource = TransaksiResource::class;
+    protected static string $resource = TransactionResource::class;
 
     protected function getHeaderActions(): array
     {
