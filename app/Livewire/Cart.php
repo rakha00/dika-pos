@@ -31,7 +31,8 @@ class Cart extends Component
     public function decrementQuantity(int $itemId)
     {
         $menu = Menu::find($itemId);
-        if (!$menu) return;
+        if (!$menu)
+            return;
 
         $itemKey = $this->findItemKey($itemId);
 
@@ -48,7 +49,8 @@ class Cart extends Component
     public function incrementQuantity(int $itemId, $customOptions = null)
     {
         $menu = Menu::find($itemId);
-        if (!$menu) return;
+        if (!$menu)
+            return;
 
         $normalizedOptions = is_array($customOptions) ? array_map('strval', $customOptions) : [];
         ksort($normalizedOptions);
@@ -107,36 +109,46 @@ class Cart extends Component
 
     public function processTransaction()
     {
-        $totalPrice = array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $this->orderItems)) * 1.1;
-        $transaction = Transaction::create([
-            'id_user' => auth()->id(),
-            'id_transaction' => $this->generateTransactionId(),
-            'customer_name' => $this->customerName,
-            'total_price' => $totalPrice,
-            'status' => 'pending',
-        ]);
-
-        foreach ($this->orderItems as $item) {
-            $detailTransaction = DetailTransaction::create([
-                'id_transaction' => $transaction->id,
-                'id_menu' => $item['id'],
-                'quantity' => $item['quantity'],
-                'subtotal' => $item['price'] * $item['quantity'],
-                'custom_options' => isset($item['customOptionsList'][0]) ? json_encode($item['customOptionsList'][0]) : json_encode([]),
+        try {
+            $validated = $this->validate([
+                'customerName' => 'required',
+                'orderItems' => 'required|array|min:1',
             ]);
 
-            if (isset($item['customOptionsList'][0])) {
-                foreach ($item['customOptionsList'][0] as $optionId) {
-                    DetailCustomOption::create([
-                        'detail_transaction_id' => $detailTransaction->id,
-                        'custom_option_value_id' => $optionId,
-                    ]);
+            $totalPrice = array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $this->orderItems)) * 1.1;
+            $transaction = Transaction::create([
+                'id_user' => auth()->id(),
+                'id_transaction' => $this->generateTransactionId(),
+                'customer_name' => $validated['customerName'],
+                'total_price' => $totalPrice,
+                'status' => 'pending',
+            ]);
+
+            foreach ($this->orderItems as $item) {
+                $detailTransaction = DetailTransaction::create([
+                    'id_transaction' => $transaction->id,
+                    'id_menu' => $item['id'],
+                    'quantity' => $item['quantity'],
+                    'subtotal' => $item['price'] * $item['quantity'],
+                    'custom_options' => isset($item['customOptionsList'][0]) ? json_encode($item['customOptionsList'][0]) : json_encode([]),
+                ]);
+
+                if (isset($item['customOptionsList'][0])) {
+                    foreach ($item['customOptionsList'][0] as $optionId) {
+                        DetailCustomOption::create([
+                            'detail_transaction_id' => $detailTransaction->id,
+                            'custom_option_value_id' => $optionId,
+                        ]);
+                    }
                 }
             }
+        } catch (\Exception $e) {
+            $this->dispatch('transaction-failed', $e->getMessage());
+            return;
         }
 
         $this->orderItems = [];
-        $this->customerName = '';
+        $this->customerName = ' ';
 
         $this->dispatch('transaction-success');
     }
