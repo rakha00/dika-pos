@@ -12,11 +12,10 @@ return new class extends Migration {
     {
         Schema::create('custom_options', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('menu_id')->constrained()->onDelete('cascade');
-            $table->string('category');
-            $table->string('value');
-            $table->enum('type', ['radio', 'checkbox']);
-            $table->unsignedBigInteger('additional_price');
+            $table->foreignId('menu_id')->constrained();
+            $table->string('category', 50);
+            $table->string('value', 50);
+            $table->integer('additional_price');
             $table->timestamps();
         });
     }

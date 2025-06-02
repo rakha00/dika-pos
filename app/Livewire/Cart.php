@@ -3,8 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\CustomOption;
-use App\Models\DetailCustomOption;
 use App\Models\DetailTransaction;
+use App\Models\DetailTransactionCustomOption;
 use App\Models\Menu;
 use App\Models\Transaction;
 use Livewire\Attributes\On;
@@ -203,7 +203,7 @@ class Cart extends Component
                 if (isset($item['customOptions'])) {
                     foreach ($item['customOptions'] as $optionSet) {
                         foreach ($optionSet as $option) {
-                            DetailCustomOption::create([
+                            DetailTransactionCustomOption::create([
                                 'detail_transaction_id' => $detailTransaction->id,
                                 'custom_option_id' => $option['id'],
                             ]);

@@ -4,10 +4,12 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\MenuResource\Pages;
 use App\Filament\Resources\MenuResource\RelationManagers;
+use App\Models\CustomOption;
 use App\Models\Menu;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,31 +18,65 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class MenuResource extends Resource
 {
     protected static ?string $model = Menu::class;
-
-    protected static ?string $modelLabel = 'Menu';
-
-    protected static ?string $pluralModelLabel = 'Menu';
-
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $pluralModelLabel = 'menu';
+    protected static ?string $navigationGroup = 'Manajemen Menu';
+    protected static ?string $slug = 'menu';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nama_menu')
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(100),
+                Forms\Components\TextInput::make('category')
+                    ->required()
+                    ->autocapitalize('words')
+                    ->datalist(Menu::query()->pluck('category')->unique()->all())
+                    ->maxLength(50),
+                Forms\Components\Textarea::make('description')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('kategori')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('harga')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('stok')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\Toggle::make('status_tersedia')
+                Forms\Components\FileUpload::make('image')
+                    ->image()
+                    ->imageResizeMode('cover')
+                    ->imageCropAspectRatio('1:1')
+                    ->imageResizeTargetWidth('400')
+                    ->imageResizeTargetHeight('400')
                     ->required(),
+                Forms\Components\TextInput::make('price')
+                    ->required()
+                    ->mask(RawJs::make('$money($input)'))
+                    ->stripCharacters(',')
+                    ->numeric()
+                    ->prefix('Rp'),
+                Forms\Components\TextInput::make('stock')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\Repeater::make('customOptions')
+                    ->relationship()
+                    ->schema([
+                        Forms\Components\TextInput::make('category')
+                            ->required()
+                            ->autocapitalize('words')
+                            ->datalist(CustomOption::query()->pluck('category')->unique()->all())
+                            ->live(onBlur: true),
+                        Forms\Components\TextInput::make('value')
+                            ->required(),
+                        Forms\Components\TextInput::make('additional_price')
+                            ->required()
+                            ->mask(RawJs::make('$money($input)'))
+                            ->stripCharacters(',')
+                            ->numeric()
+                            ->prefix('Rp'),
+                    ])
+                    ->columns(2)
+                    ->addActionLabel('Add custom option')
+                    ->defaultItems(0)
+                    ->itemLabel(fn(array $state): ?string => $state['category'] ?? null)
+                    ->reorderable()
+                    ->collapsible(),
             ]);
     }
 
@@ -48,18 +84,20 @@ class MenuResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama_menu')
+                Tables\Columns\ImageColumn::make('image'),
+                Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('kategori')
+                Tables\Columns\TextColumn::make('category')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('harga')
+                Tables\Columns\TextColumn::make('description')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('price')
+                    ->money()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('stock')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('stok')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\IconColumn::make('status_tersedia')
-                    ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -68,6 +106,7 @@ class MenuResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\ToggleColumn::make('is_available'),
             ])
             ->filters([
                 //

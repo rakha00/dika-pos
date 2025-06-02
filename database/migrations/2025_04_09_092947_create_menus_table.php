@@ -12,12 +12,13 @@ return new class extends Migration {
     {
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('category');
-            $table->string('description')->nullable();
-            $table->string('image')->nullable();
-            $table->unsignedBigInteger('price');
+            $table->string('name', 100);
+            $table->string('category', 50);
+            $table->string('description', 255);
+            $table->string('image', 255);
+            $table->integer('price');
             $table->integer('stock');
+            $table->boolean('is_available')->default(true);
             $table->timestamps();
         });
     }

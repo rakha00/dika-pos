@@ -17,14 +17,15 @@ class Menu extends Model
         'image',
         'price',
         'stock',
+        'is_available',
     ];
 
-    public function customOptions() : HasMany
+    public function customOptions(): HasMany
     {
         return $this->hasMany(CustomOption::class);
     }
 
-    public function detailTransactions() : HasMany
+    public function detailTransactions(): HasMany
     {
         return $this->hasMany(DetailTransaction::class);
     }

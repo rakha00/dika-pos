@@ -28,9 +28,9 @@ class DetailTransaction extends Model
         return $this->belongsTo(Menu::class);
     }
 
-    public function detailCustomOptions() : HasMany
+    public function detailTransactionCustomOptions(): HasMany
     {
-        return $this->hasMany(DetailCustomOption::class);
+        return $this->hasMany(DetailTransactionCustomOption::class);
     }
 
 }

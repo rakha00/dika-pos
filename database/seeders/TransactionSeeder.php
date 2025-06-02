@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\DetailCustomOption;
+
 use App\Models\DetailTransaction;
 use App\Models\Transaction;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -18,7 +18,5 @@ class TransactionSeeder extends Seeder
         Transaction::factory(10)->create();
 
         DetailTransaction::factory(50)->create();
-
-        DetailCustomOption::factory(30)->create();
     }
 }

@@ -10,10 +10,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('detail_custom_options', function (Blueprint $table) {
+        Schema::create('detail_transaction_custom_options', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('detail_transaction_id')->constrained()->onDelete('cascade');
-            $table->foreignId('custom_option_id')->constrained()->onDelete('cascade');
+            $table->foreignId('detail_transaction_id')->constrained();
+            $table->foreignId('custom_option_id')->constrained();
             $table->timestamps();
         });
     }

@@ -12,10 +12,10 @@ return new class extends Migration {
     {
         Schema::create('detail_transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('transaction_id')->constrained()->onDelete('cascade');
-            $table->foreignId('menu_id')->constrained()->onDelete('cascade');
+            $table->foreignId('transaction_id')->constrained();
+            $table->foreignId('menu_id')->constrained();
             $table->integer('quantity');
-            $table->unsignedBigInteger('subtotal');
+            $table->integer('subtotal');
             $table->timestamps();
         });
     }

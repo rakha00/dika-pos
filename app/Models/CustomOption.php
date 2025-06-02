@@ -14,11 +14,10 @@ class CustomOption extends Model
         'menu_id',
         'category',
         'value',
-        'type',
         'additional_price',
     ];
 
-    public function menu() : BelongsTo
+    public function menu(): BelongsTo
     {
         return $this->belongsTo(Menu::class);
     }
