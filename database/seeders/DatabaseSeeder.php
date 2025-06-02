@@ -37,8 +37,8 @@ class DatabaseSeeder extends Seeder
             'role' => 'chef',
         ]);
 
-        $this->call([
-            MenuSeeder::class,
-        ]);
+        // $this->call([
+        //     MenuSeeder::class,
+        // ]);
     }
 }

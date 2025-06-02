@@ -14,18 +14,19 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/order', function () {
         return view('order');
-    })->name('order');
+    })->middleware("cashier")->name('order');
 
     Route::get("/history", function () {
         return view("history");
-    })->name("history");
+    })->middleware("cashier")->name("history");
 
     Route::get("/kitchen", function () {
         return view("kitchen");
-    })->name("kitchen");
+    })->middleware("chef")->name("kitchen");
 
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
     Route::post('/profile/logout', [ProfileController::class, 'logout'])->name('profile.logout');
 });
+

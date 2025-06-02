@@ -14,59 +14,61 @@
         <h2 class="mt-4 text-lg font-bold text-gray-800">Order Details</h2>
         <div class="my-4">
             @foreach ($orderItems as $item)
-                        <div class="mb-4 rounded-lg bg-white p-4 shadow">
-                            <div class="flex items-center gap-3">
-                                <!-- Item Image & Info -->
-                                <div class="h-16 w-16 overflow-hidden rounded-md">
-                                    <img src="{{ asset('images/' . $item['image']) }}" alt="{{ $item['name'] }}"
-                                        class="h-full w-full object-cover">
-                                </div>
-                                <div class="flex-1">
-                                    <h3 class="text-sm font-medium text-gray-800">{{ $item['name'] }}</h3>
-                                    @php
-                                        $basePrice = \App\Models\Menu::find($item['id'])->price ?? 0;
-                                        $customPrice = ($item['price'] - $basePrice);
-                                    @endphp
-                                    <p class="text-xs text-gray-600">
-                                        Rp {{ number_format($item['price'], 0, ',', '.') }}
-                                        @if($customPrice > 0)
-                                            <span
-                                                class="text-[10px] text-blue-500">(+Rp{{ number_format($customPrice, 0, ',', '.') }})</span>
-                                        @endif
-                                    </p>
+                <div class="mb-4 rounded-lg bg-white p-4 shadow">
+                    <div class="flex items-center gap-3">
+                        <!-- Item Image & Info -->
+                        <div class="h-16 w-16 overflow-hidden rounded-md">
+                            <img src="{{ asset('images/' . $item['image']) }}" alt="{{ $item['name'] }}"
+                                class="h-full w-full object-cover">
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-sm font-medium text-gray-800">{{ $item['name'] }}</h3>
+                            @php
+                                $basePrice = \App\Models\Menu::find($item['id'])->price ?? 0;
+                                $customPrice = $item['price'] - $basePrice;
+                            @endphp
+                            <p class="text-xs text-gray-600">
+                                Rp {{ number_format($item['price'], 0, ',', '.') }}
+                                @if ($customPrice > 0)
+                                    <span
+                                        class="text-[10px] text-blue-500">(+Rp{{ number_format($customPrice, 0, ',', '.') }})</span>
+                                @endif
+                            </p>
 
 
-                                    <!-- Quantity controls -->
-                                    <div class="mt-3 flex items-center justify-between">
-                                        <button wire:click="$dispatch('decrement-quantity', { itemId: {{ $item['id'] }} })"
-                                            class="h-6 w-6 rounded-full bg-gray-200 text-gray-700">
-                                            <i class="fas fa-minus text-xs"></i>
-                                        </button>
-                                        <span class="w-4 text-center text-sm">{{ $item['quantity'] }}</span>
-                                        <button wire:click="$dispatch('increment-quantity', {
+                            <!-- Quantity controls -->
+                            <div class="mt-3 flex items-center justify-between">
+                                <button wire:click="$dispatch('decrement-quantity', { itemId: {{ $item['id'] }} })"
+                                    class="h-6 w-6 rounded-full bg-gray-200 text-gray-700">
+                                    <i class="fas fa-minus text-xs"></i>
+                                </button>
+                                <span class="w-4 text-center text-sm">{{ $item['quantity'] }}</span>
+                                <button
+                                    wire:click="$dispatch('increment-quantity', {
                                                                                             itemId: {{ $item['id'] }},
                                                                                             customOptions: @js($item['customOptions'] ?? [])
                                                                                             })"
-                                            class="h-6 w-6 rounded-full bg-gray-200 text-gray-700">
-                                            <i class="fas fa-plus text-xs"></i>
-                                        </button>
+                                    class="h-6 w-6 rounded-full bg-gray-200 text-gray-700">
+                                    <i class="fas fa-plus text-xs"></i>
+                                </button>
 
-                                        <!-- Customize button for customizable menu items -->
-                                        @if ($item['is_customizable'])
-                                            <button wire:click="showCustomizeModal({{ $item['id'] }}, {{ $loop->index }})"
-                                                class="ml-2 text-blue-500 text-sm">Customize</button>
-                                        @endif
+                                <!-- Customize button for customizable menu items -->
+                                @if ($item['is_customizable'])
+                                    <button wire:click="showCustomizeModal({{ $item['id'] }}, {{ $loop->index }})"
+                                        class="ml-2 text-blue-500 text-sm">Customize</button>
+                                @endif
 
-                                    </div>
-                                </div>
                             </div>
                         </div>
+                    </div>
+                </div>
             @endforeach
 
             <!-- Global Modal -->
             @if ($isModalOpen)
                 <div class="fixed inset-0 flex items-center justify-center z-50">
-                    <div class="modal-overlay fixed inset-0 bg-gray-500 opacity-75 cursor-pointer" wire:click="closeModal">
+                    <div class="modal-overlay fixed inset-0 bg-gray-500 opacity-75 cursor-pointer"
+                        wire:click="closeModal">
                     </div>
                     <div class="modal-content bg-white p-6 rounded-md shadow-lg max-h-[80vh] overflow-y-auto">
                         <div class="modal-header flex justify-between">
@@ -83,10 +85,11 @@
                                             <div class="mt-1">
                                                 @foreach ($option->customOptionValues ?? [] as $value)
                                                     <label class="inline-flex items-center mr-4">
-                                                        <input type="radio" wire:model="selectedOption.{{ $index }}.{{ $option->id }}"
+                                                        <input type="radio"
+                                                            wire:model="selectedOption.{{ $index }}.{{ $option->id }}"
                                                             value="{{ $value->id }}" class="form-radio">
                                                         <span class="ml-2">{{ $value->value }}
-                                                            @if($value->price > 0)
+                                                            @if ($value->price > 0)
                                                                 (+Rp{{ number_format($value->price, 0, ',', '.') }})
                                                             @endif
                                                         </span>

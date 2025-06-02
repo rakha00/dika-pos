@@ -1,8 +1,8 @@
-<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="mx-auto px-4 sm:px-6 lg:px-8">
     <h1 class="mb-6 text-2xl font-bold text-gray-800">Kitchen Orders</h1>
 
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-        @foreach ($orders as $order)
+        @forelse ($orders as $order)
             <div class="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-md"
                 wire:key="order-{{ $order->id }}">
                 <div class="border-b border-gray-200 bg-gray-50 px-4 py-3">
@@ -30,8 +30,10 @@
                                     {{ $detail->menu->name }} x {{ $detail->quantity }}
                                     @if ($detail->detailCustomOptions->isNotEmpty())
                                         <ul class="ml-4 text-sm text-gray-500">
-                                            @foreach($detail->detailCustomOptions as $customOption)
-                                            <li>{{ $customOption->customOptionValue->customOption->name }}: Rp{{ number_format($customOption->customOptionValue->additional_price, 0, ',', '.') }}</li>
+                                            @foreach ($detail->detailCustomOptions as $customOption)
+                                                <li>{{ $customOption->customOptionValue->customOption->name }}:
+                                                    Rp{{ number_format($customOption->customOptionValue->additional_price, 0, ',', '.') }}
+                                                </li>
                                             @endforeach
                                         </ul>
                                     @endif
@@ -50,6 +52,8 @@
                     </div>
                 </div>
             </div>
-        @endforeach
+        @empty
+            <p class="text-gray-500">Tidak ada order pending.</p>
+        @endforelse
     </div>
 </div>
