@@ -16,12 +16,12 @@ class OrderList extends Component
         $this->orderList = Transaction::all();
         $this->itemsCount = [];
         foreach ($this->orderList as $order) {
-            $this->itemsCount[$order->id] = DetailTransaction::where('id_transaction', $order->id)->sum('quantity');
+            $this->itemsCount[$order->id] = DetailTransaction::where('transaction_id', $order->id)->sum('quantity');
         }
     }
 
     public function render()
     {
-        return view('components.order.order-list');
+        return view('components.dashboard.order-list');
     }
 }

@@ -11,6 +11,7 @@ class DetailTransactionCustomOption extends Model
     use HasFactory;
 
     protected $fillable = [
+        'item_index',
         'detail_transaction_id',
         'custom_option_id'
     ];

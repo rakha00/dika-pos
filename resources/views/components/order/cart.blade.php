@@ -18,7 +18,7 @@
                     <div class="flex items-center gap-3">
                         <!-- Item Image & Info -->
                         <div class="h-16 w-16 overflow-hidden rounded-md">
-                            <img src="{{ asset($item['image']) }}" alt="{{ $item['name'] }}"
+                            <img src="{{ asset('storage/' . $item['image']) }}" alt="{{ $item['name'] }}"
                                 class="h-full w-full object-cover">
                         </div>
                         <div class="flex-1">

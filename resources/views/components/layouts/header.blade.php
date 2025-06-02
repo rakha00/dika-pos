@@ -50,9 +50,10 @@
         <div class="flex items-center space-x-4">
             <!-- Current Date and Time (hidden on mobile) -->
             <div class="hidden gap-4 text-gray-600 md:flex">
-                <div class="flex items-center text-sm">{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM Y') }}</div>
-                <div class="w-16" id="current-time" x-data x-init="setInterval(() => $el.textContent = new Date().toLocaleTimeString('id-ID'), 1000)">
-                    {{ \Carbon\Carbon::now()->format('H:i:s') }}
+                <div class="flex items-center text-sm">
+                    {{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, D MMMM Y') }}</div>
+                <div class="w-16" id="current-time" x-data x-init="setInterval(() => $el.textContent = new Date().toLocaleTimeString('id-ID', { hour12: false }), 1000)">
+                    {{ \Carbon\Carbon::now()->locale('id')->format('H:i:s') }}
                 </div>
             </div>
 

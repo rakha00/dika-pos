@@ -1,8 +1,7 @@
 <x-layouts.app>
     <x-layouts.header />
-    @error('error')
-        <div class="alert alert-danger">
-            {{ $message }}
-        </div>
-    @enderror
+
+    <!-- Order List Section -->
+    <livewire:order-list />
+
 </x-layouts.app>

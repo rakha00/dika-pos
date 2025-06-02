@@ -20,7 +20,7 @@ class MenuFactory extends Factory
             'name' => fake()->sentence(1),
             'category' => fake()->randomElement(['Makanan', 'Minuman', 'Dessert', 'Snacks']),
             'description' => fake()->sentence(3),
-            'image' => 'https://placehold.co/400',
+            'image' => '01JWQVMXFV81ARZ0VSR9Y9BPNY.png',
             'price' => fake()->numberBetween(5000, 50000),
             'stock' => fake()->randomNumber(2),
         ];

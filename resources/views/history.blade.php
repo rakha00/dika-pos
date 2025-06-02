@@ -1,7 +1,7 @@
 <x-layouts.app>
     <x-layouts.header />
 
-    <div>
+    <div class="py-6">
         <livewire:history-order />
     </div>
 </x-layouts.app>

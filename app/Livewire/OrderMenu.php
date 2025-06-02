@@ -10,12 +10,14 @@ class OrderMenu extends Component
 {
 
     public $menuItems;
+    public $categories;
     public $selectedCategory;
     public $quantities = [];
 
     public function mount()
     {
-        $this->selectedCategory = "makanan";
+        $this->selectedCategory = Menu::distinct('category')->first()->category;
+        $this->categories = Menu::distinct('category')->pluck('category')->toArray();
         $this->menuItems = Menu::where('category', $this->selectedCategory)->get();
     }
 

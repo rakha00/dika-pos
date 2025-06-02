@@ -5,9 +5,6 @@
         <!-- Main Content -->
         <div class="w-full overflow-x-hidden">
 
-            <!-- Order List Section -->
-            {{-- <livewire:order-list /> --}}
-
             <!-- Order Menu Section -->
             <livewire:order-menu />
 

@@ -12,6 +12,7 @@ return new class extends Migration {
     {
         Schema::create('detail_transaction_custom_options', function (Blueprint $table) {
             $table->id();
+            $table->integer('item_index');
             $table->foreignId('detail_transaction_id')->constrained();
             $table->foreignId('custom_option_id')->constrained();
             $table->timestamps();

@@ -201,9 +201,10 @@ class Cart extends Component
                 ]);
 
                 if (isset($item['customOptions'])) {
-                    foreach ($item['customOptions'] as $optionSet) {
+                    foreach ($item['customOptions'] as $index => $optionSet) {
                         foreach ($optionSet as $option) {
                             DetailTransactionCustomOption::create([
+                                'item_index' => $index,
                                 'detail_transaction_id' => $detailTransaction->id,
                                 'custom_option_id' => $option['id'],
                             ]);

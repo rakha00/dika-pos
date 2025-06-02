@@ -1,5 +1,5 @@
 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <h1 class="mb-6 text-2xl font-bold text-gray-800">Kitchen Orders</h1>
+    <h1 class="mb-6 text-2xl font-bold text-gray-800">Antrian Kitchen</h1>
 
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
         @foreach ($orders as $order)
@@ -28,11 +28,17 @@
                             @foreach ($order->detailTransactions as $detail)
                                 <li>
                                     {{ $detail->menu->name }} x {{ $detail->quantity }}
-                                    @if ($detail->detailCustomOptions->isNotEmpty())
+                                    @if ($detail->detailTransactionCustomOptions->isNotEmpty())
                                         <ul class="ml-4 text-sm text-gray-500">
-                                            @foreach ($detail->detailCustomOptions as $option)
-                                                <li>- {{ $option->customOption->category }}:
-                                                    {{ $option->customOption->value }}</li>
+                                            @foreach ($detail->grouped_custom_options_by_item_index as $itemIndex => $options)
+                                                <li>Item #{{ $itemIndex + 1 }}
+                                                    <ul class="ml-2">
+                                                        @foreach ($options as $option)
+                                                            <li>- {{ $option->customOption->category }}:
+                                                                {{ $option->customOption->value }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                </li>
                                             @endforeach
                                         </ul>
                                     @endif
@@ -52,5 +58,8 @@
                 </div>
             </div>
         @endforeach
+        @empty($order)
+            <li>Tidak ada antrian di kitchen.</li>
+        @endempty
     </div>
 </div>

@@ -2,22 +2,12 @@
     <!-- Food Category Navigation -->
     <div class="m-6 rounded-lg bg-white shadow">
         <div class="flex justify-between overflow-x-auto px-4 py-3">
-            <div class="{{ $selectedCategory === 'makanan' ? 'bg-blue-500 text-white' : 'text-gray-700' }} mx-1 cursor-pointer whitespace-nowrap rounded-md px-4 py-2 text-center transition-colors hover:bg-blue-500 hover:text-white"
-                wire:click="$set('selectedCategory', 'makanan')">
-                Makanan
-            </div>
-            <div class="{{ $selectedCategory === 'snacks' ? 'bg-blue-500 text-white' : 'text-gray-700' }} mx-1 cursor-pointer whitespace-nowrap rounded-md px-4 py-2 text-center transition-colors hover:bg-blue-500 hover:text-white"
-                wire:click="$set('selectedCategory', 'snacks')">
-                Snacks
-            </div>
-            <div class="{{ $selectedCategory === 'minuman' ? 'bg-blue-500 text-white' : 'text-gray-700' }} mx-1 cursor-pointer whitespace-nowrap rounded-md px-4 py-2 text-center transition-colors hover:bg-blue-500 hover:text-white"
-                wire:click="$set('selectedCategory', 'minuman')">
-                Minuman
-            </div>
-            <div class="{{ $selectedCategory === 'dessert' ? 'bg-blue-500 text-white' : 'text-gray-700' }} mx-1 cursor-pointer whitespace-nowrap rounded-md px-4 py-2 text-center transition-colors hover:bg-blue-500 hover:text-white"
-                wire:click="$set('selectedCategory', 'dessert')">
-                Dessert
-            </div>
+            @foreach ($categories as $category)
+                <div class="{{ $selectedCategory === $category ? 'bg-blue-500 text-white' : 'text-gray-700' }} mx-1 cursor-pointer whitespace-nowrap rounded-md px-4 py-2 text-center transition-colors hover:bg-blue-500 hover:text-white"
+                    wire:click="$set('selectedCategory', '{{ $category }}')">
+                    {{ $category }}
+                </div>
+            @endforeach
         </div>
     </div>
 
@@ -29,7 +19,7 @@
             <div class="flex h-full flex-col rounded-lg bg-white p-3 shadow-md sm:p-4" wire:key="{{ $item->id }}">
                 <div class="flex flex-col gap-2 sm:flex-row">
                     <div class="overflow-hidden rounded-lg sm:w-1/3">
-                        <img src="{{ $item->image }}" alt="{{ $item->name }}"
+                        <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}"
                             class="h-40 w-full object-cover object-center sm:h-full">
                     </div>
                     <div class="sm:w-2/3">
@@ -37,7 +27,7 @@
                             {{ $item->name }}
                         </h3>
                         <p class="mt-1 line-clamp-2 text-xs text-gray-600 sm:text-sm">
-                            {{ $item->description }}, {{ $item->id }}
+                            {{ $item->description }}
                         </p>
                         <p class="mt-2 text-xs text-gray-500 sm:text-sm">Stok: {{ $item->stock }}</p>
                     </div>

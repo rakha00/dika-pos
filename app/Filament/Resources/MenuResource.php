@@ -32,7 +32,6 @@ class MenuResource extends Resource
                     ->maxLength(100),
                 Forms\Components\TextInput::make('category')
                     ->required()
-                    ->autocapitalize('words')
                     ->datalist(Menu::query()->pluck('category')->unique()->all())
                     ->maxLength(50),
                 Forms\Components\Textarea::make('description')
@@ -59,7 +58,6 @@ class MenuResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('category')
                             ->required()
-                            ->autocapitalize('words')
                             ->datalist(CustomOption::query()->pluck('category')->unique()->all())
                             ->live(onBlur: true),
                         Forms\Components\TextInput::make('value')
@@ -93,7 +91,7 @@ class MenuResource extends Resource
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('price')
-                    ->money()
+                    ->money(currency: 'IDR', locale: 'id-ID')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('stock')
                     ->numeric()
@@ -113,6 +111,7 @@ class MenuResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

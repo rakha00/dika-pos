@@ -1,5 +1,5 @@
-<div class="p-4">
-    <h2 class="mb-4 text-xl font-bold">Riwayat Transaksi</h2>
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <h1 class="mb-6 text-2xl font-bold text-gray-800">Riwayat Transaksi</h1>
 
     <!-- Card Container -->
     <div class="ml-6 flex flex-row flex-wrap space-x-4 overflow-x-auto pb-4">
@@ -45,6 +45,9 @@
                 </div>
             </div>
         @endforeach
+        @empty($transactions)
+            <li>Tidak ada transaksi.</li>
+        @endempty
     </div>
 
     <!-- Modal untuk Detail Transaksi -->
@@ -100,16 +103,20 @@
                                                 <p class="font-medium text-gray-800">{{ $detail->menu->name }}
                                                     (Rp{{ number_format($detail->menu->price, 0, ',', '.') }})
                                                 </p>
-                                                @if ($detail->detailCustomOptions->isNotEmpty())
-                                                    <div class="mt-0.5 space-y-0.5">
-                                                        @foreach ($detail->detailCustomOptions as $customOption)
-                                                            <p class="text-sm text-gray-600">
-                                                                + {{ $customOption->customOption->value }}
-                                                                <span
-                                                                    class="text-gray-500">(Rp{{ number_format($customOption->customOption->additional_price, 0, ',', '.') }})</span>
-                                                            </p>
-                                                        @endforeach
-                                                    </div>
+                                                @if ($detail->grouped_custom_options_by_item_index->isNotEmpty())
+                                                    @foreach ($detail->grouped_custom_options_by_item_index as $itemIndex => $optionsInGroup)
+                                                        <p class="text-xs text-gray-400 mt-1"># {{ $itemIndex + 1 }}
+                                                        </p>
+                                                        <div class="mt-0.5 space-y-0.5">
+                                                            @foreach ($optionsInGroup as $customOptionEntry)
+                                                                <p class="text-sm text-gray-600">
+                                                                    + {{ $customOptionEntry->customOption->value }}
+                                                                    <span
+                                                                        class="text-gray-500">(Rp{{ number_format($customOptionEntry->customOption->additional_price, 0, ',', '.') }})</span>
+                                                                </p>
+                                                            @endforeach
+                                                        </div>
+                                                    @endforeach
                                                 @endif
                                             </div>
                                             <div class="col-span-3 text-right">
@@ -124,7 +131,7 @@
                             </div>
 
                             <!-- Summary -->
-                            <div class="space-y-1 bg-gray-50">
+                            <div class="space-y-1">
                                 <div class="flex justify-between px-2 text-gray-600">
                                     <span>Subtotal</span>
                                     <span>Rp{{ number_format($transaction->total_price / 1.1, 0, ',', '.') }}</span>
