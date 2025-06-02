@@ -24,7 +24,7 @@ class TransactionResource extends Resource
 
     protected static ?string $navigationLabel = 'Transaksi';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-bookmark';
 
 
     public static function table(Table $table): Table

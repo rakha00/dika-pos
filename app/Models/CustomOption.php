@@ -16,6 +16,11 @@ class CustomOption extends Model
         'type', // misalnya: radio, dropdown, dll
     ];
 
+    public function menus()
+    {
+    return $this->belongsToMany(Menu::class, 'menu_custom_option', 'custom_option_id', 'id_menu');
+    }
+
     public function values()
     {
         return $this->hasMany(CustomOptionValue::class);

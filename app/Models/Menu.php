@@ -13,8 +13,12 @@ class Menu extends Model
 
     protected $fillable = [
         'name',
+        'category',
+        'description',
+        'image',
         'price',
-        'is_customizable'
+        'stock',
+        'is_customizable',
     ];
 
     public function customOptions()
@@ -24,6 +28,6 @@ class Menu extends Model
 
     public function detailTransactions()
     {
-        return $this->hasMany(DetailTransaction::class); // jika ada relasi transaksi
+        return $this->hasMany(DetailTransaction::class);
     }
 }
