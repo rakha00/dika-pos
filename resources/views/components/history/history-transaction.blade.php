@@ -1,4 +1,4 @@
-<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="mx-auto px-4 sm:px-6 lg:px-8">
     <h1 class="mb-6 text-2xl font-bold text-gray-800">Riwayat Transaksi</h1>
 
     <!-- Card Container -->

@@ -1,4 +1,4 @@
-<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="mx-auto px-4 sm:px-6 lg:px-8">
     <h1 class="mb-6 text-2xl font-bold text-gray-800">Antrian Kitchen</h1>
 
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">

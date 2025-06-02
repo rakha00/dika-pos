@@ -75,6 +75,10 @@
                 <x-order.modal-custom :listItemCustom="$listItemCustom" :listCustomOptions="$listCustomOptions" :selectedItemIndex="$selectedItemIndex" :selectedOptions="$selectedOptions" />
             @endif
 
+            @if ($isConfirmModalOpen)
+                <x-order.modal-confirm :paymentMethod="$paymentMethod" :changeAmount="$changeAmount" />
+            @endif
+
             @if (empty($orderItems))
                 <p class="text-sm text-gray-600">No items in cart</p>
             @endif
@@ -101,7 +105,7 @@
 
 
         <!-- Process Transaction Button -->
-        <button wire:click="processTransaction"
+        <button wire:click="showConfirmModal"
             class="w-full rounded-md bg-blue-500 py-2 text-white transition-colors hover:bg-blue-600">
             Process Transaction
         </button>

@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained();
             $table->string('transaction_id');
             $table->string('customer_name');
+            $table->integer('cash_amount');
             $table->integer('total_price');
             $table->enum('status', ['pending', 'completed', 'cancelled']);
             $table->timestamps();

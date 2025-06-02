@@ -1,4 +1,4 @@
-<div>
+<div class="mb-6">
     <!-- Food Category Navigation -->
     <div class="m-6 rounded-lg bg-white shadow">
         <div class="flex justify-between overflow-x-auto px-4 py-3">

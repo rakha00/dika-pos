@@ -15,13 +15,17 @@ class Cart extends Component
     public $menu;
     public $customerName;
     public $orderItems = [];
+    public $paymentMethod;
+    public $cashAmount;
     public $totalPrice;
+    public $changeAmount;
     public $listCustomOptions;
     public $listItemCustom;
     public $selectedItemIndex;
     public $selectedOptions = [];
     public $customOptions = [];
     public $isModalOpen = false;
+    public $isConfirmModalOpen = false;
 
     public function mount()
     {
@@ -164,13 +168,27 @@ class Cart extends Component
 
     public function processTransaction()
     {
-        // dd($this->orderItems);
         try {
+            if ($this->paymentMethod == 'non-cash') {
+                $this->cashAmount = $this->totalPrice;
+            }
+
             $validated = $this->validate([
                 'customerName' => 'required|string|min:3',
+                'cashAmount' => [
+                    'required',
+                    'numeric',
+                    'min:1',
+                    function ($attribute, $value, $fail) {
+                        if ($value < $this->totalPrice) {
+                            $fail('Jumlah tunai kurang dari total pembayaran');
+                        }
+                    }
+                ],
                 'totalPrice' => 'required|numeric|min:1'
             ], [
                 'customerName.required' => 'Nama customer belum diisi!',
+                'cashAmount.required' => 'Jumlah tunai belum diisi!',
                 'totalPrice.required' => 'Item belum diisi!',
             ]);
 
@@ -178,6 +196,7 @@ class Cart extends Component
                 'user_id' => auth()->id(),
                 'transaction_id' => 'TRX-' . str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT),
                 'customer_name' => $validated['customerName'],
+                'cash_amount' => $validated['cashAmount'],
                 'total_price' => $validated['totalPrice'] * 1.1,
                 'status' => 'pending',
             ]);
@@ -218,6 +237,7 @@ class Cart extends Component
         }
 
         $this->dispatch('transaction-success');
+        $this->changeAmount = $this->cashAmount - $this->totalPrice;
         $this->customerName = '';
         $this->orderItems = [];
         $this->totalPrice = 0;
@@ -241,6 +261,16 @@ class Cart extends Component
     public function hideCustomizeModal()
     {
         $this->isModalOpen = false;
+    }
+
+    public function showConfirmModal()
+    {
+        $this->isConfirmModalOpen = true;
+    }
+
+    public function hideConfirmModal()
+    {
+        $this->isConfirmModalOpen = false;
     }
 
     public function render()
