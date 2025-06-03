@@ -47,16 +47,33 @@
                         </ul>
                     </div>
 
-                    <div class="mt-auto">
-                        <div class="flex justify-end">
-                            <button wire:click="completeOrder({{ $order->id }})"
-                                class="rounded-md bg-blue-600 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-700">
-                                Mark as Ready
-                            </button>
+                    <div class="flex w-full justify-end gap-2">
+                        <div class="mt-auto">
+                            <div class="flex justify-end">
+                                <button wire:click="showCancelModal({{ $order->id }})"
+                                    class="rounded-md bg-red-600 px-4 py-2 text-sm text-white transition-colors hover:bg-red-700">
+                                    Cancel Order
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-auto">
+                            <div class="flex justify-end">
+                                <button wire:click="showConfirmModal({{ $order->id }})"
+                                    class="rounded-md bg-blue-600 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-700">
+                                    Mark as Ready
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            @if ($isCancelModalOpen)
+                <x-kitchen.modal-cancel :selectedOrderId="$selectedOrderId" :selectedTransactionId="$selectedTransactionId" />
+            @endif
+
+            @if ($isConfirmModalOpen)
+                <x-kitchen.modal-confirm :selectedOrderId="$selectedOrderId" :selectedTransactionId="$selectedTransactionId" />
+            @endif
         @endforeach
         @empty($order)
             <li>Tidak ada antrian di kitchen.</li>
