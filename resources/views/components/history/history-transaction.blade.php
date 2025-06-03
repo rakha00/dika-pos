@@ -144,6 +144,14 @@
                                     <span>Total</span>
                                     <span>Rp{{ number_format($transaction->total_price, 0, ',', '.') }}</span>
                                 </div>
+                                <div class="flex justify-between px-2 text-gray-600">
+                                    <span>Tunai</span>
+                                    <span>Rp{{ number_format($transaction->cash_amount, 0, ',', '.') }}</span>
+                                </div>
+                                <div class="flex justify-between px-2 text-gray-600">
+                                    <span>Kembalian</span>
+                                    <span>Rp{{ number_format($transaction->cash_amount - $transaction->total_price, 0, ',', '.') }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
