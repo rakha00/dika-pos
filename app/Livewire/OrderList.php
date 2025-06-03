@@ -13,7 +13,7 @@ class OrderList extends Component
 
     public function mount()
     {
-        $this->orderList = Transaction::all();
+        $this->orderList = Transaction::latest()->get();
         $this->itemsCount = [];
         foreach ($this->orderList as $order) {
             $this->itemsCount[$order->id] = DetailTransaction::where('transaction_id', $order->id)->sum('quantity');

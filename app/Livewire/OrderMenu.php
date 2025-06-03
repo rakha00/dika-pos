@@ -18,12 +18,12 @@ class OrderMenu extends Component
     {
         $this->selectedCategory = Menu::distinct('category')->first()->category;
         $this->categories = Menu::distinct('category')->pluck('category')->toArray();
-        $this->menuItems = Menu::where('category', $this->selectedCategory)->get();
+        $this->menuItems = Menu::where('category', $this->selectedCategory)->where('stock', '>', 0)->where('is_available', true)->get();
     }
 
     public function updatedSelectedCategory()
     {
-        $this->menuItems = Menu::where('category', $this->selectedCategory)->get();
+        $this->menuItems = Menu::where('category', $this->selectedCategory)->where('stock', '>', 0)->where('is_available', true)->get();
     }
 
     #[On('decrement-quantity')]
@@ -37,9 +37,19 @@ class OrderMenu extends Component
     #[On('increment-quantity')]
     public function incrementQuantity(int $itemId)
     {
+        $menu = Menu::find($itemId);
+        if (!$menu) {
+            return;
+        }
+
         if (!isset($this->quantities[$itemId])) {
             $this->quantities[$itemId] = 0;
         }
+
+        if ($this->quantities[$itemId] >= $menu->stock) {
+            return;
+        }
+
         $this->quantities[$itemId]++;
     }
 

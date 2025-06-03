@@ -71,12 +71,17 @@ class Cart extends Component
     public function incrementQuantity(int $itemId)
     {
         $menu = Menu::find($itemId);
-        if (!$menu)
+        if (!$menu || $menu->stock <= 0)
             return;
 
         $itemKey = $this->findItemKey($itemId);
 
         if ($itemKey !== false) {
+            // Check if current quantity would exceed available stock
+            if ($this->orderItems[$itemKey]['quantity'] >= $menu->stock) {
+                return;
+            }
+
             $this->orderItems[$itemKey]['quantity']++;
 
             if (isset($this->orderItems[$itemKey]['customOptions'])) {
@@ -170,7 +175,7 @@ class Cart extends Component
     {
         try {
             if ($this->paymentMethod == 'non-cash') {
-                $this->cashAmount = $this->totalPrice;
+                $this->cashAmount = $this->totalPrice * 1.1;
             }
 
             $validated = $this->validate([
@@ -219,6 +224,11 @@ class Cart extends Component
                     'subtotal' => $item['price'] * $item['quantity'] + $customOptionsTotal
                 ]);
 
+                $menu = Menu::find($item['id']);
+                $menu->update([
+                    'stock' => $menu->stock - $item['quantity']
+                ]);
+
                 if (isset($item['customOptions'])) {
                     foreach ($item['customOptions'] as $index => $optionSet) {
                         foreach ($optionSet as $option) {
@@ -237,7 +247,7 @@ class Cart extends Component
         }
 
         $this->dispatch('transaction-success');
-        $this->changeAmount = $this->cashAmount - $this->totalPrice;
+        $this->changeAmount = $this->cashAmount - $this->totalPrice * 1.1;
         $this->customerName = '';
         $this->orderItems = [];
         $this->totalPrice = 0;
