@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReceiptController;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/login", function () {
@@ -28,4 +29,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
     Route::post('/profile/logout', [ProfileController::class, 'logout'])->name('profile.logout');
+
+    Route::get('/receipt/print/{transactionId}', [ReceiptController::class, 'printReceipt'])->name('printReceipt');
 });
