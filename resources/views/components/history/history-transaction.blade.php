@@ -38,10 +38,13 @@
                     </div>
 
                     <!-- Detail Button -->
-                    <button wire:click="showDetail({{ $trx->id }})"
-                        class="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700">
-                        Detail
-                    </button>
+                    @if ($trx->status === 'completed')
+                        <button wire:click="showDetail({{ $trx->id }})"
+                            class="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700">
+                            Detail
+                        </button>
+                    @endif
+
                 </div>
             </div>
         @endforeach

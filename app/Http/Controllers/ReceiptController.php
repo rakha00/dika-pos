@@ -10,7 +10,7 @@ class ReceiptController extends Controller
 {
     public function printReceipt(Request $request)
     {
-        $transaction = Transaction::with('detailTransactions.menu.customOptions.customOption')->findOrFail($request->transactionId);
+        $transaction = Transaction::findOrFail($request->transactionId);
         return view('components.history.receipt', compact('transaction'));
     }
 }
