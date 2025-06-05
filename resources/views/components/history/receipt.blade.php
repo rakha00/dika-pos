@@ -35,6 +35,9 @@
             <span>PPN (10%):</span>
             <span>Rp{{ number_format($transaction->total_price - $transaction->total_price / 1.1, 0, ',', '.') }}</span>
         </div>
+
+        <div class="border-t border-dashed border-gray-400 my-2"></div>
+
         <div class="flex justify-between font-bold text-sm">
             <span>Total:</span>
             <span>Rp{{ number_format($transaction->total_price, 0, ',', '.') }}</span>

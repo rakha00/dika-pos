@@ -20,6 +20,7 @@ class Cart extends Component
     public $totalPrice;
     public $changeAmount;
     public $listCustomOptions;
+    public $transactionId;
     public $listItemCustom;
     public $selectedItemIndex;
     public $selectedOptions = [];
@@ -205,6 +206,8 @@ class Cart extends Component
                 'total_price' => $validated['totalPrice'] * 1.1,
                 'status' => 'pending',
             ]);
+
+            $this->transactionId = $transaction->id;
 
             foreach ($this->orderItems as $item) {
                 $customOptionsTotal = 0;

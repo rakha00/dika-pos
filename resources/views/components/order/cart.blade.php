@@ -76,7 +76,7 @@
             @endif
 
             @if ($isConfirmModalOpen)
-                <x-order.modal-confirm :paymentMethod="$paymentMethod" :changeAmount="$changeAmount" />
+                <x-order.modal-confirm :paymentMethod="$paymentMethod" :changeAmount="$changeAmount" :transactionId="$transactionId" />
             @endif
 
             @if (empty($orderItems))

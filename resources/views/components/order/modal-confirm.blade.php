@@ -53,6 +53,16 @@
                     </button>
                 </div>
             @endif
+
+            @if ($changeAmount)
+                <div class="mt-4 flex justify-end">
+                    <a href="{{ route('printReceipt', $transactionId) }}" target="_blank"
+                        class="flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700">
+                        <i class="fas fa-print h-5 w-5"></i>
+                        Cetak Struk
+                    </a>
+                </div>
+            @endif
         </div>
     </div>
 </div>
