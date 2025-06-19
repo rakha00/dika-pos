@@ -17,7 +17,7 @@
                     <div class="flex flex-row justify-between gap-4">
                         <div class="flex flex-col">
                             <span class="text-xs text-gray-500">Items</span>
-                            <p class="font-medium text-gray-700">{{ $itemsCount[$order->id] }}</p>
+                            <p class="font-medium text-gray-700">{{ $order->total_items }}</p>
                         </div>
                         <div class="flex flex-col">
                             <span class="text-xs text-gray-500">Status</span>
