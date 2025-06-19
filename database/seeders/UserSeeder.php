@@ -14,25 +14,40 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        // Default password for all users is 'password'
         User::create([
-            'name' => 'admin',
+            'name' => 'Admin Utama',
             'email' => 'admin@gmail.com',
-            'password' => Hash::make('admin'),
             'role' => 'admin',
+            'password' => Hash::make('password'),
         ]);
 
         User::create([
-            'name' => 'cashier',
-            'email' => 'cashier@gmail.com',
-            'password' => Hash::make('cashier'),
+            'name' => 'Kasir Siska',
+            'email' => 'siska@gmail.com',
             'role' => 'cashier',
+            'password' => Hash::make('password'),
         ]);
 
         User::create([
-            'name' => 'chef',
-            'email' => 'chef@gmail.com',
-            'password' => Hash::make('chef'),
+            'name' => 'Kasir Budi',
+            'email' => 'budi@gmail.com',
+            'role' => 'cashier',
+            'password' => Hash::make('password'),
+        ]);
+
+        User::create([
+            'name' => 'Chef Anton',
+            'email' => 'anton@gmail.com',
             'role' => 'chef',
+            'password' => Hash::make('password'),
+        ]);
+
+        User::create([
+            'name' => 'Chef Rina',
+            'email' => 'rina@gmail.com',
+            'role' => 'chef',
+            'password' => Hash::make('password'),
         ]);
     }
 }
