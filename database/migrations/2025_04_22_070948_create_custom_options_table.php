@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('custom_options', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('menu_id')->constrained();
+            $table->foreignId('menu_id')->constrained()->cascadeOnDelete();
             $table->string('category', 50);
             $table->string('value', 50);
             $table->integer('additional_price');
