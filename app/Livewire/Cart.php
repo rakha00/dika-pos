@@ -49,8 +49,9 @@ class Cart extends Component
     public function decrementQuantity(int $itemId)
     {
         $menu = Menu::find($itemId);
-        if (!$menu)
+        if (!$menu) {
             return;
+        }
 
         $itemKey = $this->findItemKey($itemId);
 
@@ -72,8 +73,9 @@ class Cart extends Component
     public function incrementQuantity(int $itemId)
     {
         $menu = Menu::find($itemId);
-        if (!$menu || $menu->stock <= 0)
+        if (!$menu || $menu->stock <= 0) {
             return;
+        }
 
         $itemKey = $this->findItemKey($itemId);
 
