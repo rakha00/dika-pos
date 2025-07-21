@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->string('transaction_id');
-            $table->string('customer_name');
+            $table->string('transaction_id', 100);
+            $table->string('customer_name', 100);
             $table->integer('cash_amount');
             $table->integer('total_price');
             $table->enum('status', ['pending', 'completed', 'cancelled']);
