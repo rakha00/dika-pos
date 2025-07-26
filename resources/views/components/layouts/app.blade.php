@@ -19,6 +19,12 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
 
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ asset('build/assets/app-Cui5wifh.css') }}">
+
+    <!-- Scripts -->
+    <script src="{{ asset('build/assets/app-T1DpEqax.js') }}" defer></script>
+
     @livewireStyles
 </head>
 
